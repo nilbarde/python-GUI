@@ -258,8 +258,24 @@ class ShowScreen(Screen):
 		self.write_txt += "\nAcc. Details : " + now_details["Account details"]
 		self.write_txt += "\nContact : " + now_details["Contact"]
 
-		details_btn = Label(text=self.write_txt,halign="center",valign="center",font_size=20)
+		details_btn = Label(text=self.write_txt,halign="center",valign="center",font_size=30,pos_hint={"center_x":0.5,"center_y":0.5})
+		home_btn = Button(text="Go Home",font_size=25,background_color=(0,0,0,1),color=(1,1,1,0.1),size_hint=(0.48,0.1),pos_hint={"center_x":0.25,"center_y":0.05},on_press=self.gohome)
+		search_btn = Button(text="Search",font_size=25,background_color=(0,0,0,1),color=(1,1,1,0.1),size_hint=(0.48,0.1),pos_hint={"center_x":0.75,"center_y":0.05},on_press=self.gosearch)
 		self.add_widget(details_btn)
+		self.add_widget(home_btn)
+		self.add_widget(search_btn)
+
+	def gohome(self,_):
+		self.clear_widgets()
+		self.refresh_button()
+		self.manager.current = "userhome_window"
+		self.manager.transition.direction = 'left'
+
+	def gosearch(self,_):
+		self.clear_widgets()
+		self.refresh_button()
+		self.manager.current = "getpass_window"
+		self.manager.transition.direction = 'left'
 
 class NewScreen(Screen):
 	pass_val = BooleanProperty()
