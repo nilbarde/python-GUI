@@ -80,6 +80,15 @@
 		font_size : 30
 		on_release :
 			root.manager.current = 'newpass_window'
+			root.manager.transition.direction = 'up'
+
+	Button :
+		text : "Show All"
+		size_hint : 0.8 , 0.2
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.2}
+		font_size : 30
+		on_release :
+			root.manager.current = 'showall_window'
 			root.manager.transition.direction = 'right'
 
 <GetScreen>
@@ -90,7 +99,9 @@
 		size_hint : 0.18 , 0.08
 		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.95}
 		font_size : 20
-		on_press : root.search_by("Site",site_input.text)
+		on_press : 
+			root.search_by("Site",site_input.text)
+			root.manager.transition.direction = 'left'
 
 	TextInput :
 		id : site_input
@@ -104,7 +115,9 @@
 		size_hint : 0.18 , 0.08
 		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.85}
 		font_size : 20
-		on_press : root.search_by("Site Name",sitename_input.text)
+		on_press : 
+			root.search_by("Site Name",sitename_input.text)
+			root.manager.transition.direction = 'left'
 
 	TextInput :
 		id : sitename_input
@@ -118,7 +131,9 @@
 		size_hint : 0.18 , 0.08
 		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.75}
 		font_size : 20
-		on_press : root.search_by("Email-ID",email_input.text)
+		on_press :  
+			root.search_by("Email-ID",email_input.text)
+			root.manager.transition.direction = 'left'
 
 	TextInput :
 		id : email_input
@@ -132,7 +147,9 @@
 		size_hint : 0.18 , 0.08
 		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.65}
 		font_size : 20
-		on_press : root.search_by("Username",username_input.text)
+		on_press : 
+			root.search_by("Username",username_input.text)
+			root.manager.transition.direction = 'left'
 
 	TextInput :
 		id : username_input
@@ -147,7 +164,9 @@
 		size_hint : 0.18 , 0.08
 		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.55}
 		font_size : 20
-		on_press : root.search_by("Password",password_input.text)
+		on_press :  
+			root.search_by("Password",password_input.text)
+			root.manager.transition.direction = 'left'
 
 	TextInput :
 		id : password_input
@@ -162,7 +181,9 @@
 		size_hint : 0.18 , 0.08
 		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.45}
 		font_size : 20
-		on_press : root.search_by("Contact",contact_input.text)
+		on_press :  
+			root.search_by("Contact",contact_input.text)
+			root.manager.transition.direction = 'left'
 
 	TextInput :
 		id : contact_input
@@ -170,13 +191,23 @@
 		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.45}
 		font_size : 25
 
+	Button :
+		text : "Go Back"
+		size_hint : 0.96,0.08
+		pos_hint : {"center_x":0.5 , "center_y":0.05}
+		on_release :
+			root.manager.current = "userhome_window"
+			root.manager.transition.direction = 'right'
+
 <ResScreen>
 	name : 'result_window'
 	
 <ShowScreen>
-	name : 'show_acc_window'
+	name : 'showacc_window'
 	
-
+<ShowAllScreen>
+	name : 'showall_window'
+	
 <NewScreen>
 	name : 'newpass_window'
 	Button :
@@ -286,8 +317,8 @@
 		pos_hint : {'center_x' : 0.25 , 'center_y' : 0.15}
 		font_size : 20
 		on_press : 
-			root.manager.current = 'user_window'
-			root.manager.transition.direction = 'left'
+			root.manager.current = 'userhome_window'
+			root.manager.transition.direction = 'down'
 
 	Button : 
 		text : "Clear Data"
