@@ -8,9 +8,11 @@ from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
-from kivy.properties import StringProperty,BooleanProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
+from kivy.core.window import Window
+from kivy.properties import StringProperty,BooleanProperty
 
 from json import dump as j_dump
 from json import load as j_load
@@ -161,19 +163,78 @@ class ResScreen(Screen):
 	def search_by(self,btn__):
 		global all_details, tot_accs, search_cat, search_val
 		self.clear_widgets()
+		self.play = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
+		self.roll = GridLayout(cols=1, spacing=10, size_hint_y=None)
+		self.back_txt = "Go Back"
+		print(len(all_details))
+		back_btn_up = Button(text=self.back_txt,font_size=25,size_hint_y=None,height=40,on_press=self.goback)
+		self.roll.bind(minimum_height=self.roll.setter('height'))
+		self.roll.add_widget(back_btn_up)
 		for i in range(tot_accs):
 			if(all_details[i][search_cat]==search_val):
 				btn_txt = "Site : " + all_details[i]["Site Name"] + "     Username : " + all_details[i]["Username"]
-				this_button = Button(text=btn_txt,font_size=25,size_hint=(0.96,0.08),pos_hint={"center_x":0.5,"center_y":(0.95-(0.1*self.tot_buttons))},on_press=partial(self.show_acc,i))
-				self.tot_buttons +=1
-				self.add_widget(this_button)
+				this_button = Button(text=btn_txt,font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,1),on_press=partial(self.show_acc,i))
+				self.roll.add_widget(this_button)
+		back_btn_down = Button(text=self.back_txt,font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,1),on_press=self.goback)
+		self.roll.add_widget(back_btn_down)
+		self.add_widget(self.play)
+		self.play.add_widget(self.roll)
 
 	def show_acc(self,acc_no,_):
 		global show_acc_no
 		show_acc_no = acc_no
 		self.clear_widgets()
 		self.refresh_button()
-		self.manager.current = "show_acc_window"
+		self.manager.current = "showacc_window"
+		self.manager.transition.direction = 'left'
+
+	def goback(self,_):
+		self.clear_widgets()
+		self.refresh_button()
+		self.manager.current = "getpass_window"
+		self.manager.transition.direction = 'right'
+
+class ShowAllScreen(Screen):
+	back_txt = StringProperty()
+	def __init__(self,**kwargs):
+		super(ShowAllScreen,self).__init__(**kwargs)
+		self.refresh_button()
+
+	def refresh_button(self):
+		refresh_btn = Button(text="click here to refresh",on_press=self.add_all)
+		self.add_widget(refresh_btn)
+
+	def add_all(self,_):
+		global tot_accs,all_details
+		self.clear_widgets()
+		self.play = ScrollView(size_hint=(1, None), size=(Window.width, Window.height))
+		self.roll = GridLayout(cols=1, spacing=10, size_hint_y=None)
+		self.back_txt = "Go Back"
+		print(len(all_details))
+		back_btn_up = Button(text=self.back_txt,font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,1),on_press=self.gohome)
+		self.roll.bind(minimum_height=self.roll.setter('height'))
+		self.roll.add_widget(back_btn_up)
+		for i in range(tot_accs):
+			btn_txt = "Site : " + all_details[i]["Site Name"] + "     Username : " + all_details[i]["Username"]
+			this_button = Button(text=btn_txt,font_size=25,size_hint_y=None,height=40,on_press=partial(self.show_acc,i))
+			self.roll.add_widget(this_button)
+		back_btn_down = Button(text=self.back_txt,font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,1),on_press=self.gohome)
+		self.roll.add_widget(back_btn_down)
+		self.add_widget(self.play)
+		self.play.add_widget(self.roll)
+
+	def show_acc(self,acc_no,_):
+		global show_acc_no
+		show_acc_no = acc_no
+		self.clear_widgets()
+		self.refresh_button()
+		self.manager.current = "showacc_window"
+
+	def gohome(self,_):
+		self.clear_widgets()
+		self.refresh_button()
+		self.manager.current = "userhome_window"
+		self.manager.transition.direction = 'left'
 
 class ShowScreen(Screen):
 	write_txt = StringProperty()
@@ -240,7 +301,8 @@ class MainClass(App):
 		ScreenMan.add_widget(GetScreen(name='getpass_window'))
 		ScreenMan.add_widget(NewScreen(name='newpass_window'))
 		ScreenMan.add_widget(ResScreen(name='result_window'))
-		ScreenMan.add_widget(ShowScreen(name='show_acc_window'))
+		ScreenMan.add_widget(ShowScreen(name='showacc_window'))
+		ScreenMan.add_widget(ShowAllScreen(name='showall_window'))
 		
 		return ScreenMan
 
