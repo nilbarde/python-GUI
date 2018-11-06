@@ -1,0 +1,32 @@
+{
+    "image_viewer":[
+        "jpg",
+        "png",
+        "jpeg"
+    ],
+    "music_player":[
+        "mp3",
+        "m4a",
+        "wav",
+        "wv",
+        "aiff",
+        "aac",
+        "wma",
+        "flac"
+    ],
+    "text_editor":[
+        "txt",
+        "py",
+        "c",
+        "cpp",
+        "kv"
+    ],
+    "video_player":[
+        "mp4",
+        "mov",
+        "wmv",
+        "mkv",
+        "flv",
+        "avi"
+    ]
+}
