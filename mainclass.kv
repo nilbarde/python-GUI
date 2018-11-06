@@ -1,0 +1,587 @@
+<LoginScreen>
+	name : 'login_window'
+	Button :
+		text : 'Name'
+		size_hint : 0.3 , 0.08
+		pos_hint : {'center_x' : 0.33 , 'center_y' : 0.9}
+		font_size : 25
+
+	TextInput :
+		id : name_input
+		size_hint : 0.3 , 0.08
+		pos_hint : {'center_x' : 0.67 , 'center_y' : 0.9}
+		font_size : 25
+
+	Button :
+		text : 'Password'
+		size_hint : 0.3 , 0.08
+		pos_hint : {'center_x' : 0.33 , 'center_y' : 0.8}
+		font_size : 25
+
+	TextInput :
+		id : pass_input
+		size_hint : 0.3 , 0.08
+		pos_hint : {'center_x' : 0.67 , 'center_y' : 0.8}
+		password: True
+		font_size : 25
+
+	Button :
+		text : 'Pin'
+		size_hint : 0.3 , 0.08
+		pos_hint : {'center_x' : 0.33 , 'center_y' : 0.7}
+		font_size : 25
+
+	TextInput :
+		id : pin_input
+		size_hint : 0.3 , 0.08
+		pos_hint : {'center_x' : 0.67 , 'center_y' : 0.7}
+		password: True
+		font_size : 25
+
+	Button :
+		text : 'R'
+		size_hint : 0.05 , 0.05
+		pos_hint : {'center_x' : 0.355 , 'center_y' : 0.6}
+		font_size : 20
+		on_press :
+			root.update_captcha()
+
+	Button :
+		text : root.do_sum
+		size_hint : 0.15 , 0.05
+		pos_hint : {'center_x' : 0.495 , 'center_y' : 0.6}
+		font_size : 20
+		background_color : 0,0,0,1
+
+	Label :
+		text : '|||||||||||||||||||||||||||||||'
+		color : 0,0,0,1
+		background_color : 0,0,1,1
+		size_hint : 0.15 , 0.05
+		pos_hint : {'center_x' : 0.495 , 'center_y' : 0.6}
+
+	TextInput :
+		id : sum_input
+		size_hint : 0.08 , 0.05
+		pos_hint : {'x' : 0.59 , 'top' : 0.60}
+		pos_hint : {'center_x' : 0.63 , 'center_y' : 0.6}
+		font_size : 20
+
+	Button :
+		text : 'Login'
+		size_hint : 0.5 , 0.15
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.45}
+		on_release : root.login_info()
+		font_size : 30
+
+	Button :
+		text : 'Sign Up'
+		size_hint : 0.4 , 0.10
+		pos_hint : {'x' : 0.25 , 'top' : 0.5}
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.25}
+		font_size : 30
+		on_release : root.signup_info()
+
+<UserScreen>
+	name : 'userhome_window'
+	Button :
+		text : "Get Password"
+		size_hint : 0.8 , 0.2
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.875}
+		font_size : 30
+		on_release :
+			root.manager.current = 'getpass_window'
+			root.manager.transition.direction = 'left'
+
+	Button :
+		text : "New Password"
+		size_hint : 0.8 , 0.2
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.625}
+		font_size : 30
+		on_release :
+			root.manager.current = 'newpass_window'
+			root.manager.transition.direction = 'up'
+
+	Button :
+		text : "Show All"
+		size_hint : 0.8 , 0.2
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.375}
+		font_size : 30
+		on_release :
+			root.manager.current = 'showall_window'
+			root.manager.transition.direction = 'right'
+
+	Button :
+		text : "Settings"
+		size_hint : 0.8 , 0.2
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.125}
+		font_size : 30
+		on_release :
+			root.manager.current = 'setting_window'
+			root.manager.transition.direction = 'down'
+
+<SettingScreen>
+	name : 'setting_window'
+	Button :
+		text : "Change Login Info"
+		size_hint : 0.8 , 0.2
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.875}
+		font_size : 30
+		on_press :
+			root.change()
+	Button :
+		text : "Logout"
+		size_hint : 0.8 , 0.2
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.375}
+		font_size : 30
+		on_press :
+			root.manager.current = 'login_window'
+			root.manager.transition.direction = 'down'
+	Button :
+		text : "Go Back"
+		size_hint : 0.8 , 0.25
+		background_color : (0,0,0,1)
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.125}
+		font_size : 30
+		on_press :
+			root.manager.current = 'userhome_window'
+			root.manager.transition.direction = 'down'
+
+<ChangeScreen>
+	name : 'changepass_window'
+	Button : 
+		text : "Your Password"
+		size_hint : 0.23 , 0.08
+		pos_hint : {'center_x' : 0.12 , 'center_y' : 0.925}
+		font_size : 25
+	TextInput :
+		id : pass_input 
+		size_hint : 0.75 , 0.08
+		pos_hint : {'center_x' : 0.62 , 'center_y' : 0.925}
+		font_size : 30
+		password : True
+	Button : 
+		text : "New UserName"
+		size_hint : 0.23 , 0.08
+		pos_hint : {'center_x' : 0.12 , 'center_y' : 0.775}
+		font_size : 25
+		on_release :
+			root.change_fun("name")
+	TextInput :
+		id : change_name_input 
+		size_hint : 0.75 , 0.08
+		pos_hint : {'center_x' : 0.62 , 'center_y' : 0.775}
+		font_size : 30
+	Button : 
+		text : "New Password"
+		size_hint : 0.23 , 0.08
+		pos_hint : {'center_x' : 0.12 , 'center_y' : 0.625}
+		font_size : 25
+		on_release :
+			root.change_fun("pass")
+	TextInput :
+		id : change_pass_input 
+		size_hint : 0.37 , 0.08
+		pos_hint : {'center_x' : 0.43 , 'center_y' : 0.625}
+		font_size : 30
+		password : True
+	TextInput :
+		id : confirm_pass_input 
+		size_hint : 0.37 , 0.08
+		pos_hint : {'center_x' : 0.81 , 'center_y' : 0.625}
+		font_size : 30
+		password : True
+	Button : 
+		text : "New Pin"
+		size_hint : 0.23 , 0.08
+		pos_hint : {'center_x' : 0.12 , 'center_y' : 0.475}
+		font_size : 25
+		on_release :
+			root.change_fun("pin")
+	TextInput :
+		id : change_pin_input 
+		size_hint : 0.37 , 0.08
+		pos_hint : {'center_x' : 0.43 , 'center_y' : 0.475}
+		font_size : 30
+		password : True
+	TextInput :
+		id : confirm_pin_input 
+		size_hint : 0.37 , 0.08
+		pos_hint : {'center_x' : 0.81 , 'center_y' : 0.475}
+		font_size : 30
+		password : True
+	Label :
+		id : status
+		text : "INPUT SOMETHING"
+		color : (0,0,1,0.25)
+		size_hint : 1.0 , 0.08
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.325}
+		font_size : 30
+	Button : 
+		text : "Go Back"
+		size_hint : 1.0 , 0.08
+		background_color : (0,0,0,1)
+		color : (1,1,1,0.1)
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.05}
+		font_size : 30
+		on_release :
+			root.manager.current = 'setting_window'
+			root.manager.transition.direction = 'down'
+
+<GetScreen>
+	name : 'getpass_window'
+	Button :
+		text : "Site"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.95}
+		font_size : 20
+		on_press : 
+			root.search_by("Site",site_input.text)
+			root.manager.transition.direction = 'left'
+
+	TextInput :
+		id : site_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.95}
+		font_size : 25
+
+	Button :
+		text : "Site Name"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.85}
+		font_size : 20
+		on_press : 
+			root.search_by("Site Name",sitename_input.text)
+			root.manager.transition.direction = 'left'
+
+	TextInput :
+		id : sitename_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.85}
+		font_size : 25
+
+	Button :
+		text : "Email-ID"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.75}
+		font_size : 20
+		on_press :  
+			root.search_by("Email-ID",email_input.text)
+			root.manager.transition.direction = 'left'
+
+	TextInput :
+		id : email_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.75}
+		font_size : 25
+
+	Button :
+		text : "Username"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.65}
+		font_size : 20
+		on_press : 
+			root.search_by("Username",username_input.text)
+			root.manager.transition.direction = 'left'
+
+	TextInput :
+		id : username_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.65}
+		font_size : 25
+
+	Button :
+		text : "Password"
+		background_color : 0,0,0,1
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.55}
+		font_size : 20
+		on_press :  
+			root.search_by("Password",password_input.text)
+			root.manager.transition.direction = 'left'
+
+	TextInput :
+		id : password_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.55}
+		font_size : 25
+		password : root.pass_val
+
+	Button :
+		text : "Contact"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.45}
+		font_size : 20
+		on_press :  
+			root.search_by("Contact",contact_input.text)
+			root.manager.transition.direction = 'left'
+
+	TextInput :
+		id : contact_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.45}
+		font_size : 25
+
+	Button :
+		text : "Go Back"
+		size_hint : 0.96,0.08
+		pos_hint : {"center_x":0.5 , "center_y":0.05}
+		on_release :
+			root.manager.current = "userhome_window"
+			root.manager.transition.direction = 'right'
+
+<ResScreen>
+	name : 'result_window'
+	
+<ShowScreen>
+	name : 'showacc_window'
+	
+<ShowAllScreen>
+	name : 'showall_window'
+	
+<NewScreen>
+	name : 'newpass_window'
+	Button :
+		text : "Site"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.95}
+		font_size : 20
+
+	TextInput :
+		id : site_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.95}
+		font_size : 25
+
+	Button :
+		text : "Site Name"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.85}
+		font_size : 20
+
+	TextInput :
+		id : sitename_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.85}
+		font_size : 25
+
+	Button :
+		text : "Email-ID"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.75}
+		font_size : 20
+
+	TextInput :
+		id : email_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.75}
+		font_size : 25
+
+	Button :
+		text : "Username"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.65}
+		font_size : 20
+
+	TextInput :
+		id : username_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.65}
+		font_size : 25
+
+	Button :
+		text : "Password"
+		background_color : 0,0,0,1
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.55}
+		font_size : 20
+		on_press : root.change_pass_val()
+
+	TextInput :
+		id : password_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.55}
+		font_size : 25
+		password : root.pass_val
+
+	Button :
+		text : "Account Details"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.45}
+		font_size : 20
+
+	TextInput :
+		id : accdetails_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.45}
+		font_size : 25
+
+	Button :
+		text : "Contact"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.35}
+		font_size : 20
+
+	TextInput :
+		id : contact_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.35}
+		font_size : 25
+
+	Button :
+		text : "Submit"
+		size_hint : 1 , 0.08
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.25}
+		font_size : 20
+		on_press : root.submit()
+
+	Button : 
+		text : "Go Back"
+		size_hint : 0.48, 0.08
+		pos_hint : {'center_x' : 0.25 , 'center_y' : 0.15}
+		font_size : 20
+		on_press : 
+			root.manager.current = 'userhome_window'
+			root.manager.transition.direction = 'down'
+
+	Button : 
+		text : "Clear Data"
+		size_hint : 0.48, 0.08
+		pos_hint : {'center_x' : 0.75 , 'center_y' : 0.15}
+		font_size : 20
+		on_press : 
+			root.clear_data()
+
+<EditScreen>
+	name : 'edit_window'
+	Button :
+		text : "Site"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.95}
+		font_size : 20
+
+	TextInput :
+		id : site_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.95}
+		font_size : 25
+
+	Button :
+		text : "Site Name"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.85}
+		font_size : 20
+
+	TextInput :
+		id : sitename_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.85}
+		font_size : 25
+
+	Button :
+		text : "Email-ID"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.75}
+		font_size : 20
+
+	TextInput :
+		id : email_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.75}
+		font_size : 25
+
+	Button :
+		text : "Username"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.65}
+		font_size : 20
+
+	TextInput :
+		id : username_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.65}
+		font_size : 25
+
+	Button :
+		text : "Password"
+		background_color : 0,0,0,1
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.55}
+		font_size : 20
+		on_press : root.change_pass_val()
+
+	TextInput :
+		id : password_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.55}
+		font_size : 25
+		password : root.pass_val
+
+	Button :
+		text : "Account Details"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.45}
+		font_size : 20
+
+	TextInput :
+		id : accdetails_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.45}
+		font_size : 25
+
+	Button :
+		text : "Contact"
+		background_color : 0,0,0,1
+		size_hint : 0.18 , 0.08
+		pos_hint : {'center_x' : 0.1 , 'center_y' : 0.35}
+		font_size : 20
+
+	TextInput :
+		id : contact_input
+		size_hint : 0.78 , 0.08
+		pos_hint : {'center_x' : 0.6 , 'center_y' : 0.35}
+		font_size : 25
+
+	Button :
+		text : "Submit"
+		size_hint : 1 , 0.08
+		pos_hint : {'center_x' : 0.5 , 'center_y' : 0.25}
+		font_size : 20
+		on_press : root.save()
+
+	Button : 
+		text : "Go Back"
+		size_hint : 0.48, 0.08
+		pos_hint : {'center_x' : 0.25 , 'center_y' : 0.15}
+		font_size : 20
+		on_press : 
+			root.manager.current = 'userhome_window'
+			root.manager.transition.direction = 'down'
+
+	Button : 
+		text : "Clear Data"
+		size_hint : 0.48, 0.08
+		pos_hint : {'center_x' : 0.75 , 'center_y' : 0.15}
+		font_size : 20
+		on_press : 
+			root.clear_data()
+
