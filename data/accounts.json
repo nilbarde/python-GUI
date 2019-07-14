@@ -24,7 +24,27 @@
                                 0,
                                 1.0
                             ],
-                            "name":"Uber Eats"
+                            "name":"default"
+                        }
+                    }
+                },
+                "2":{
+                    "color":[
+                        0.5,
+                        0,
+                        0.5,
+                        1.0
+                    ],
+                    "name":"Travel",
+                    "sub_cats":{
+                        "1":{
+                            "color":[
+                                1.0,
+                                0,
+                                0,
+                                1.0
+                            ],
+                            "name":"default"
                         }
                     }
                 }

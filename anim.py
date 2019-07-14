@@ -82,21 +82,21 @@ class HomeScreen(Screen):
 
 	def define_colors(self):
 		self.black = (0,0,0,1.0)
-		self.white = (255/255.0,255/255.0,255/255.0,1.0)
-		self.dark_red = (255/255.0,0,0,1.0)
-		self.dark_green = (0,255/255.0,0,1.0)
-		self.dark_blue = (0,0,255/255.0,1.0)
-		self.red = (170/255.0,0,0,1.0)
-		self.green = (0,170/255.0,0,1.0)
-		self.blue = (0,0,170/255.0,1.0)
-		self.dark_gray = (51/255.0,51/255.0,51/255.0,1.0)
-		self.gray = (150/255.0,150/255.0,150/255.0,1.0)
-		self.aqua = (0,255/255.0,255/255.0,1.0)
-		self.magenta = (255/255.0,0,255/255.0,1.0)
-		self.olive = (128/255.0,128/255.0,0,1.0)
-		self.purple = (128/255.0,0,128/255.0,1.0)
-		self.teal = (0,128/255.0,128/255.0,1.0)
-		self.orange = (255/255.0,140/255.0,0,1.0)
+		self.white = (1.0,1.0,1.0,1.0)
+		self.dark_red = (1.0.0,0,0,1.0)
+		self.dark_green = (0,1.0.0,0,1.0)
+		self.dark_blue = (0,0,1.0.0,1.0)
+		self.red = (0.66.0,0,0,1.0)
+		self.green = (0,0.66.0,0,1.0)
+		self.blue = (0,0,0.66.0,1.0)
+		self.dark_gray = (0.2,0.2,0.2,1.0)
+		self.gray = (0.6,0.6,0.6,1.0)
+		self.aqua = (0,1.0,1.0,1.0)
+		self.magenta = (1.0,0,1.0,1.0)
+		self.olive = (0.5,0.5,0,1.0)
+		self.purple = (0.5,0,0.5,1.0)
+		self.teal = (0,0.5,0.5,1.0)
+		self.orange = (0.5,0.6,0,1.0)
 		self.all_colors = [self.red,self.green,self.blue,self.gray,self.aqua,self.magenta,self.olive,self.purple,self.teal,self.orange]
 		self.all_colors = [self.dark_red,self.red,self.dark_blue,self.blue,self.dark_green,self.green,self.dark_gray,self.gray,
 		self.black,self.white,self.aqua,self.magenta,self.olive,self.purple,self.teal,self.orange]
@@ -232,74 +232,124 @@ class HomeScreen(Screen):
 			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
 			Thumb.bind(texture_size=Thumb.setter("size"))
 			self.MainScrollRoll.add_widget(Thumb)
+
 		self.CatRoll = {}
 		self.SubCatRoll = {}
-		self.AddCatRoll = {}
 		self.AddSubCatRoll = {}
-		self.AddCatColor = {}
+		# self.AddCatRoll = {}
+
 		self.AddSubCatColor = {}
-		self.AddSubCatBtn = {}
 		self.AddSubCatText = {}
+		self.AddSubCatBtn = {}
+
+		# self.AddCatColor = self.all_colors[0]
+		# self.AddCatText = "New Category"
+		# self.AddCatBtn = {}
+
 		self.NowCats = self.GetCurrUserInfo("categories")
+		self.RefreshCatMenu()
+
+	def RefreshCatMenu(self):
+		self.MainScrollRoll.clear_widgets()
 		for i in range(1,len(self.NowCats)+1):
-			self.CatRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=5)
+			self.CatRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
 			self.CatRoll[i].bind(minimum_height=self.CatRoll[i].setter('height'))
 			self.MainScrollRoll.add_widget(self.CatRoll[i])
 			self.RefreshCat(i)
+
+			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+			Roll.bind(minimum_height=Roll.setter('height'))
+			Thumb = Button(text="",size_hint_x=0.2,halign='center',font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			Roll.add_widget(Thumb)
+			self.SubCatRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.8,None),padding=2)
+			self.SubCatRoll[i].bind(minimum_height=self.SubCatRoll[i].setter('height'))
+			Roll.add_widget(self.SubCatRoll[i])
+			self.MainScrollRoll.add_widget(Roll)
+			self.RefreshSubCat(i)
+
+			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+			Roll.bind(minimum_height=Roll.setter('height'))
+			Thumb = Button(text="",size_hint_x=0.2,halign='center',font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			Roll.add_widget(Thumb)
+			self.AddSubCatRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.8,None),padding=2)
+			self.AddSubCatRoll[i].bind(minimum_height=self.AddSubCatRoll[i].setter('height'))
+			Roll.add_widget(self.AddSubCatRoll[i])
+			self.MainScrollRoll.add_widget(Roll)
+			self.RefreshAddSubCat(i)
+
+		self.AddCatRoll = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
+		self.AddCatRoll.bind(minimum_height=self.AddCatRoll.setter('height'))
+		self.MainScrollRoll.add_widget(self.AddCatRoll)
+		self.RefreshAddCat()
 
 	def RefreshCat(self,i):
 		self.CatRoll[i].clear_widgets()
 		Thumb = Button(text=self.NowCats[str(i)]["name"],halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.NowCats[str(i)]["color"],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
 		self.CatRoll[i].add_widget(Thumb)
 
-		self.SubCatRoll[i] = GridLayout(cols=2,spacing=3,size_hint=(1.0,None),padding=5)
-		self.SubCatRoll[i].bind(minimum_height=self.SubCatRoll[i].setter('height'))
-		self.MainScrollRoll.add_widget(self.SubCatRoll[i])
-		self.RefreshSubCat(i)
-
 	def RefreshSubCat(self,i):
 		self.SubCatRoll[i].clear_widgets()
 		for j in range(1,len(self.NowCats[str(i)]["sub_cats"])+1):
-			Thumb = Button(text="",size_hint_x=0.2,halign='center',font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
-			self.SubCatRoll[i].add_widget(Thumb)
 			Thumb = Button(text=self.NowCats[str(i)]["sub_cats"][str(j)]["name"],size_hint_x=0.8,halign='center',font_size=25,size_hint_y=None,height=40,background_color=self.NowCats[str(i)]["sub_cats"][str(j)]["color"],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
 			self.SubCatRoll[i].add_widget(Thumb)
 
-		self.AddSubCatRoll[i] = GridLayout(cols=2,spacing=3,size_hint=(1.0,None),padding=5)
-		self.AddSubCatRoll[i].bind(minimum_height=self.AddSubCatRoll[i].setter('height'))
-		self.AddNewSubCatBar(i)
+	def RefreshAddSubCat(self,i):
+		self.AddSubCatRoll[i].clear_widgets()
 
-	def AddNewSubCatBar(self,i):
-		Thumb = Button(text="",size_hint_x=0.2,halign='center',font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
-		self.SubCatRoll[i].add_widget(Thumb)
+		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+		MainRoll.bind(minimum_height=MainRoll.setter('height'))
+		self.AddSubCatRoll[i].add_widget(MainRoll)
 
 		self.AddSubCatText[i] = TextInput(size_hint_x=0.4,valign="center",halign='center',font_size=25,size_hint_y=None,height=80,font_name=FontDict["LobsterTwo-BoldItalic"])
-		self.AddSubCatRoll[i].add_widget(self.AddSubCatText[i])
+		MainRoll.add_widget(self.AddSubCatText[i])
 
 		Roll = GridLayout(cols=4,spacing=3,size_hint=(1.0,None),padding=2,height=80)
 		for j in range(len(self.all_colors)):
 			fun = partial(self.ChangeNewColor,"sub",i,self.all_colors[j])
 			Thumb = Button(text="",size_hint=(1.0,1.0),valign="center",halign='center',font_size=15,background_color=self.all_colors[j],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
 			Roll.add_widget(Thumb)
-		self.AddSubCatRoll[i].add_widget(Roll)
-
-		self.SubCatRoll[i].add_widget(self.AddSubCatRoll[i])
-
-		Thumb = Button(text="",size_hint_x=0.2,halign='center',font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
-		self.SubCatRoll[i].add_widget(Thumb)
+		MainRoll.add_widget(Roll)
 
 		fun = partial(self.AddCat,"sub",i)
 		self.AddSubCatColor[i] = self.all_colors[0]
 		self.AddSubCatBtn[i] = Button(text="+",size_hint_x=0.2,valign="center",halign='center',font_size=45,size_hint_y=None,height=80,background_color=self.AddSubCatColor[i],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
-		self.SubCatRoll[i].add_widget(self.AddSubCatBtn[i])
+		self.AddSubCatRoll[i].add_widget(self.AddSubCatBtn[i])
+
+	def RefreshAddCat(self):
+		self.AddCatRoll.clear_widgets()
+
+		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+		MainRoll.bind(minimum_height=MainRoll.setter('height'))
+		self.AddCatRoll.add_widget(MainRoll)
+
+		self.AddCatText = TextInput(size_hint_x=0.4,valign="center",halign='center',font_size=25,size_hint_y=None,height=80,font_name=FontDict["LobsterTwo-BoldItalic"])
+		MainRoll.add_widget(self.AddCatText)
+
+		Roll = GridLayout(cols=4,spacing=3,size_hint=(1.0,None),padding=2,height=80)
+		for j in range(len(self.all_colors)):
+			fun = partial(self.ChangeNewColor,"main",-1,self.all_colors[j])
+			Thumb = Button(text="",size_hint=(1.0,1.0),valign="center",halign='center',font_size=15,background_color=self.all_colors[j],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+			Roll.add_widget(Thumb)
+		MainRoll.add_widget(Roll)
+
+		fun = partial(self.AddCat,"main",-1)
+		self.AddCatColor = self.all_colors[0]
+		self.AddCatBtn = Button(text="+",size_hint_x=0.2,valign="center",halign='center',font_size=45,size_hint_y=None,height=80,background_color=self.AddCatColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddCatRoll.add_widget(self.AddCatBtn)
 
 	def ChangeNewColor(self,item_type,number,color,_="_"):
 		if(item_type == "sub"):
 			self.AddSubCatColor[number] = color
 			self.AddSubCatBtn[number].background_color = color
+		elif(item_type == "main"):
+			self.AddCatColor[number] = color
+			self.AddCatBtn[number].background_color = color
 
 	def AddCat(self,item_type,number,_="_"):
-		print("add cat",item_type,number)
 		if(item_type == "sub"):
 			MyDict = {"color":self.AddSubCatColor[number],"name":self.AddSubCatText[number].text}
 			user = MainDict["now_user"]
@@ -307,6 +357,16 @@ class HomeScreen(Screen):
 			MainDict["users"][user]["categories"][str(number)]["sub_cats"][str(len(subs)+1)] = MyDict
 			SaveDict()
 			self.RefreshSubCat(number)
+			self.RefreshAddSubCat(number)
+		if(item_type == "main"):
+			MyDict = {"color":self.AddCatColor,"name":self.AddCatText.text,"sub_cats":{"1":{"color":[1.0,0,0,1.0],"name":"default"}}}
+			user = MainDict["now_user"]
+			subs = MainDict["users"][user]["categories"]
+			MainDict["users"][user]["categories"][str(len(subs)+1)] = MyDict
+			SaveDict()
+			# self.RefreshCat(number)
+			# self.RefreshAddCat(number)
+			self.RefreshCatMenu()
 
 	def MakeWhiteBack(self,Grid,color=-1):
 		if color == -1:
