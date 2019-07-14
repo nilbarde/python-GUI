@@ -1,0 +1,37 @@
+{
+    "now_user":"0001",
+    "users":{
+        "0000":{
+            "dp":"./data/app_images/dp.png",
+            "name":"Sign In"
+        },
+        "0001":{
+            "accounts":{},
+            "categories":{
+                "1":{
+                    "color":[
+                        0.2,
+                        0.2,
+                        0.2,
+                        1.0
+                    ],
+                    "name":"Food",
+                    "sub_cats":{
+                        "1":{
+                            "color":[
+                                1.0,
+                                0,
+                                0,
+                                1.0
+                            ],
+                            "name":"Uber Eats"
+                        }
+                    }
+                }
+            },
+            "dp":"./data/app_images/0001.jpg",
+            "expenses":{},
+            "name":"Nil Barde"
+        }
+    }
+}
