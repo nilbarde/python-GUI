@@ -83,12 +83,12 @@ class HomeScreen(Screen):
 	def define_colors(self):
 		self.black = (0,0,0,1.0)
 		self.white = (1.0,1.0,1.0,1.0)
-		self.dark_red = (1.0.0,0,0,1.0)
-		self.dark_green = (0,1.0.0,0,1.0)
-		self.dark_blue = (0,0,1.0.0,1.0)
-		self.red = (0.66.0,0,0,1.0)
-		self.green = (0,0.66.0,0,1.0)
-		self.blue = (0,0,0.66.0,1.0)
+		self.dark_red = (1.0,0,0,1.0)
+		self.dark_green = (0,1.0,0,1.0)
+		self.dark_blue = (0,0,1.0,1.0)
+		self.red = (0.66,0,0,1.0)
+		self.green = (0,0.66,0,1.0)
+		self.blue = (0,0,0.66,1.0)
 		self.dark_gray = (0.2,0.2,0.2,1.0)
 		self.gray = (0.6,0.6,0.6,1.0)
 		self.aqua = (0,1.0,1.0,1.0)
@@ -112,35 +112,23 @@ class HomeScreen(Screen):
 		super(HomeScreen, self).on_touch_down(touch)	
 
 	def on_pre_enter(self):
-		# self.clear_widgets()
-		# with self.canvas.before:
-		# 	Color(1, 1, 1, 1)
-		# 	self.rect = Rectangle(size=self.size, pos=self.pos)
 		if self.NowWindow == "Home":
-			# Window.clearcolor = (1,1,1,1)
-			if not self.LastWindow == "Menu":
-				# self.TransitionMenuClose()
-				self.clear_widgets()
-				Window.clearcolor = (1,1,1,1)
-				self.AddToggleBtn()
-			# else:
-			# 	self.AddToggleBtn()
+			self.clear_widgets()
+			Window.clearcolor = (1,1,1,1)
+			self.AddToggleBtn()
 		elif self.NowWindow == "Menu":
-			# Window.clearcolor = (0.6,0.6,0.6,0.6)
-			# self.clear_widgets()
 			if self.LastWindow == "Home":
 				self.ShowMenu()
 			else:
 				self.ShowMenu()
 		elif self.NowWindow == "ShowCategory":
-			print("going categoris",self.LastWindow)
-			if not self.LastWindow == "Menu":
-				self.clear_widgets()
-				self.AddToggleBtn()
-				self.ShowCategories()
-			else:
-				self.AddToggleBtn()
-				self.ShowCategories()
+			self.clear_widgets()
+			self.AddToggleBtn()
+			self.ShowCategories()
+		elif self.NowWindow == "ShowAccount":
+			self.clear_widgets()
+			self.AddToggleBtn()
+			self.ShowAccounts()
 
 	def AddToggleBtn(self,_="_"):
 		fun = partial(self.ChangeWindow,"Menu")
@@ -148,6 +136,7 @@ class HomeScreen(Screen):
 		self.add_widget(self.TogBtn)
 		# self.TransitionBtn()
 
+	############### Menu ###############
 	def ShowMenu(self,_="_"):
 		self.MenuScrollPlay = ScrollView(size_hint=(self.MenuScrollW, self.MenuScrollH),pos_hint={"center_x":self.MenuHideScrollX,"center_y":self.MenuHideScrollY}, size=(Window.width, Window.height))
 		self.MenuScrollRoll = GridLayout(cols=1, spacing=1, size_hint_y=None,padding=1)
@@ -214,6 +203,31 @@ class HomeScreen(Screen):
 		self.MenuDP.pos = self.MenuTopDP.pos
 		self.MenuDP.size = self.MenuTopDP.size
 
+	def TransitionMenuOpen(self,_="_"):
+		anim_time = 0.25
+		anim = Animation(pos_hint={"center_x":self.MenuScrollX,"center_y":self.MenuScrollY},duration=anim_time)
+		anim.start(self.MenuScrollPlay)
+		anim2 = Animation(clearcolor=(0.6,0.6,0.6,0.6),duration=anim_time)
+		anim2.start(Window)
+		self.MenuOpen = True
+
+	def TransitionMenuClose(self,_="_"):
+		anim_time = 0.25
+		anim = Animation(pos_hint={"center_x":self.MenuHideScrollX,"center_y":self.MenuHideScrollY},duration=anim_time)
+		anim.bind(on_start=lambda x,y: self.wait_anim(True),
+            on_complete=lambda x,y: self.on_pre_enter())
+		anim.start(self.MenuScrollPlay)
+		anim2 = Animation(clearcolor=(1,1,1,1),duration=anim_time)
+		anim2.start(Window)
+		self.MenuOpen = False
+
+	def wait_anim(self,x):
+		self.anim_on = x
+		self.anim_on = x
+
+	############### Menu ###############
+
+	############### category ###############
 	def ShowCategories(self):
 		self.MainScrollPlay = ScrollView(size_hint=(self.MainScrollW, self.MainScrollH),pos_hint={"center_x":self.MainScrollX,"center_y":self.MainScrollY}, size=(Window.width, Window.height))
 		self.MainScrollRoll = GridLayout(cols=1, spacing=10, size_hint_y=None,padding=5)
@@ -225,26 +239,14 @@ class HomeScreen(Screen):
 
 	def AddCatMenu(self):
 		self.MainScrollRoll.clear_widgets()
-		for i in range(0):
-			ThumbText = str(i+1)
-			fun = partial(self.ChangeWindow,"Home")
-			Thumb = Button(text=ThumbText,halign='center',font_size=25,size_hint_y=None,background_color=(1,0,0,0.9),font_name=FontDict["LobsterTwo-BoldItalic"])
-			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
-			Thumb.bind(texture_size=Thumb.setter("size"))
-			self.MainScrollRoll.add_widget(Thumb)
 
 		self.CatRoll = {}
 		self.SubCatRoll = {}
 		self.AddSubCatRoll = {}
-		# self.AddCatRoll = {}
 
 		self.AddSubCatColor = {}
 		self.AddSubCatText = {}
 		self.AddSubCatBtn = {}
-
-		# self.AddCatColor = self.all_colors[0]
-		# self.AddCatText = "New Category"
-		# self.AddCatBtn = {}
 
 		self.NowCats = self.GetCurrUserInfo("categories")
 		self.RefreshCatMenu()
@@ -288,16 +290,32 @@ class HomeScreen(Screen):
 
 	def RefreshCat(self,i):
 		self.CatRoll[i].clear_widgets()
-		Thumb = Button(text=self.NowCats[str(i)]["name"],halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.NowCats[str(i)]["color"],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		name = self.NowCats[str(i)]["name"]
+		exp = self.NowCats[str(i)]["type"]
+		name +=  " - " + exp*"Income" + (1-exp)*"Expense"
+		Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.NowCats[str(i)]["color"],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
 		self.CatRoll[i].add_widget(Thumb)
 
 	def RefreshSubCat(self,i):
 		self.SubCatRoll[i].clear_widgets()
 		for j in range(1,len(self.NowCats[str(i)]["sub_cats"])+1):
-			Thumb = Button(text=self.NowCats[str(i)]["sub_cats"][str(j)]["name"],size_hint_x=0.8,halign='center',font_size=25,size_hint_y=None,height=40,background_color=self.NowCats[str(i)]["sub_cats"][str(j)]["color"],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			name = self.NowCats[str(i)]["sub_cats"][str(j)]["name"]
+			Thumb = Button(text=name,size_hint_x=0.8,halign='center',font_size=25,size_hint_y=None,height=40,background_color=self.NowCats[str(i)]["sub_cats"][str(j)]["color"],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
 			self.SubCatRoll[i].add_widget(Thumb)
 
 	def RefreshAddSubCat(self,i):
+		self.AddSubCatRoll[i].clear_widgets()
+
+		fun = partial(self.RefreshAddSubCatMain,i)
+		name = self.NowCats[str(i)]["name"]
+		exp = self.NowCats[str(i)]["type"]
+		name +=  " - " + exp*"Income" + (1-exp)*"Expense"
+		# self.AddSubCatColor[i] = self.all_colors[0]
+		self.AddSubCatColor[i] = (0.5,0.5,0.5,0.5)
+		self.AddSubCatBtn[i] = Button(text="Add Sub-Category In " + name,size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=40,background_color=self.AddSubCatColor[i],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddSubCatRoll[i].add_widget(self.AddSubCatBtn[i])
+
+	def RefreshAddSubCatMain(self,i,_="_"):
 		self.AddSubCatRoll[i].clear_widgets()
 
 		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
@@ -315,11 +333,21 @@ class HomeScreen(Screen):
 		MainRoll.add_widget(Roll)
 
 		fun = partial(self.AddCat,"sub",i)
+		name = self.NowCats[str(i)]["name"]
+		exp = self.NowCats[str(i)]["type"]
+		name +=  " - " + exp*"Income" + (1-exp)*"Expense"
 		self.AddSubCatColor[i] = self.all_colors[0]
-		self.AddSubCatBtn[i] = Button(text="+",size_hint_x=0.2,valign="center",halign='center',font_size=45,size_hint_y=None,height=80,background_color=self.AddSubCatColor[i],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddSubCatBtn[i] = Button(text="Add Sub-Category In " + name,size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=40,background_color=self.AddSubCatColor[i],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
 		self.AddSubCatRoll[i].add_widget(self.AddSubCatBtn[i])
 
 	def RefreshAddCat(self):
+		fun = partial(self.RefreshAddCatMain)
+		self.AddCatRoll.clear_widgets()
+		self.AddCatColor = (0.3,0.3,0.3,0.5)
+		self.AddCatBtn = Button(text="Add Category",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.AddCatColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddCatRoll.add_widget(self.AddCatBtn)
+
+	def RefreshAddCatMain(self,_="_"):
 		self.AddCatRoll.clear_widgets()
 
 		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
@@ -336,18 +364,23 @@ class HomeScreen(Screen):
 			Roll.add_widget(Thumb)
 		MainRoll.add_widget(Roll)
 
-		fun = partial(self.AddCat,"main",-1)
-		self.AddCatColor = self.all_colors[0]
-		self.AddCatBtn = Button(text="+",size_hint_x=0.2,valign="center",halign='center',font_size=45,size_hint_y=None,height=80,background_color=self.AddCatColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
-		self.AddCatRoll.add_widget(self.AddCatBtn)
+		fun = partial(self.AddCat,"main",0)
+		self.AddCatColor = self.all_colors[1]
+		self.AddCatBtnE = Button(text="Add Expense Category",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.AddCatColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddCatRoll.add_widget(self.AddCatBtnE)
+		fun = partial(self.AddCat,"main",1)
+		self.AddCatColor = self.all_colors[1]
+		self.AddCatBtnI = Button(text="Add Income Category",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.AddCatColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddCatRoll.add_widget(self.AddCatBtnI)
 
 	def ChangeNewColor(self,item_type,number,color,_="_"):
 		if(item_type == "sub"):
 			self.AddSubCatColor[number] = color
 			self.AddSubCatBtn[number].background_color = color
 		elif(item_type == "main"):
-			self.AddCatColor[number] = color
-			self.AddCatBtn[number].background_color = color
+			self.AddCatColor = color
+			self.AddCatBtnI.background_color = color
+			self.AddCatBtnE.background_color = color
 
 	def AddCat(self,item_type,number,_="_"):
 		if(item_type == "sub"):
@@ -359,14 +392,151 @@ class HomeScreen(Screen):
 			self.RefreshSubCat(number)
 			self.RefreshAddSubCat(number)
 		if(item_type == "main"):
-			MyDict = {"color":self.AddCatColor,"name":self.AddCatText.text,"sub_cats":{"1":{"color":[1.0,0,0,1.0],"name":"default"}}}
+			MyDict = {"type":number,"color":self.AddCatColor,"name":self.AddCatText.text,"sub_cats":{"1":{"color":[1.0,0,0,1.0],"name":"default"}}}
 			user = MainDict["now_user"]
 			subs = MainDict["users"][user]["categories"]
 			MainDict["users"][user]["categories"][str(len(subs)+1)] = MyDict
 			SaveDict()
-			# self.RefreshCat(number)
-			# self.RefreshAddCat(number)
 			self.RefreshCatMenu()
+
+	############### category ###############
+
+	############### account ###############
+	def ShowAccounts(self):
+		self.MainScrollPlay = ScrollView(size_hint=(self.MainScrollW, self.MainScrollH),pos_hint={"center_x":self.MainScrollX,"center_y":self.MainScrollY}, size=(Window.width, Window.height))
+		self.MainScrollRoll = GridLayout(cols=1, spacing=10, size_hint_y=None,padding=5)
+		self.MainScrollRoll.bind(minimum_height=self.MainScrollRoll.setter('height'))
+		self.MainScrollPlay.add_widget(self.MainScrollRoll)
+		self.add_widget(self.MainScrollPlay)
+		self.MakeWhiteBack(self.MainScrollPlay,partial(Color,0.0,0.6,0.7,0.8))
+		self.AddAccountMenu()
+
+	def AddAccountMenu(self):
+		self.MainScrollRoll.clear_widgets()
+
+		self.AccNameRoll = {}
+		self.AccBalRoll = {}
+		self.AccDetRoll = {}
+		self.AccAddDetRoll = {}
+
+		self.NowAccs = self.GetCurrUserInfo("accounts")
+		self.RefreshAccMenu()
+
+	def RefreshAccMenu(self):
+		print("adding accounts")
+		self.MainScrollRoll.clear_widgets()
+		for i in range(1,len(self.NowAccs)+1):
+			self.AccNameRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
+			self.AccNameRoll[i].bind(minimum_height=self.AccNameRoll[i].setter('height'))
+			self.MainScrollRoll.add_widget(self.AccNameRoll[i])
+			self.RefreshAccName(i)
+
+			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+			Roll.bind(minimum_height=Roll.setter('height'))
+			Thumb = Button(text="",size_hint_x=0.15,halign='center',font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			Roll.add_widget(Thumb)
+			self.AccBalRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.85,None),padding=2)
+			self.AccBalRoll[i].bind(minimum_height=self.AccBalRoll[i].setter('height'))
+			Roll.add_widget(self.AccBalRoll[i])
+			self.MainScrollRoll.add_widget(Roll)
+			self.RefreshAccBal(i)
+
+			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+			Roll.bind(minimum_height=Roll.setter('height'))
+			Thumb = Button(text="",size_hint_x=0.3,halign='center',font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			Roll.add_widget(Thumb)
+			self.AccDetRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.7,None),padding=2)
+			self.AccDetRoll[i].bind(minimum_height=self.AccDetRoll[i].setter('height'))
+			Roll.add_widget(self.AccDetRoll[i])
+			self.MainScrollRoll.add_widget(Roll)
+			self.RefreshAccDet(i)
+
+			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+			Roll.bind(minimum_height=Roll.setter('height'))
+			Thumb = Button(text="",size_hint_x=0.3,halign='center',font_size=25,size_hint_y=None,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			Roll.add_widget(Thumb)
+			self.AccAddDetRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.7,None),padding=2)
+			self.AccAddDetRoll[i].bind(minimum_height=self.AccAddDetRoll[i].setter('height'))
+			Roll.add_widget(self.AccAddDetRoll[i])
+			self.MainScrollRoll.add_widget(Roll)
+			self.RefreshAccAddDet(i)
+
+		# self.AddCatRoll = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
+		# self.AddCatRoll.bind(minimum_height=self.AddCatRoll.setter('height'))
+		# self.MainScrollRoll.add_widget(self.AddCatRoll)
+		# self.RefreshAddCat()
+
+	def RefreshAccName(self,i):
+		self.AccNameRoll[i].clear_widgets()
+		name = self.NowAccs[str(i)]["name"]
+		color = self.NowAccs[str(i)]["color"]
+		Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		self.AccNameRoll[i].add_widget(Thumb)
+
+	def RefreshAccBal(self,i):
+		self.AccBalRoll[i].clear_widgets()
+		name = str(self.NowAccs[str(i)]["balance"])
+		color = self.NowAccs[str(i)]["color"]
+		Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		self.AccBalRoll[i].add_widget(Thumb)
+
+	def RefreshAccDet(self,i):
+		self.AccDetRoll[i].clear_widgets()
+		dets = (self.NowAccs[str(i)]["details"])
+		color = self.NowAccs[str(i)]["color"]
+		# print(self.NowAccs)
+		for j in range(1,len(dets)+1):
+			name = self.NowAccs[str(i)]["details"][str(j)]["title"] + " - "
+			name += self.NowAccs[str(i)]["details"][str(j)]["info"]
+			Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			self.AccDetRoll[i].add_widget(Thumb)
+
+	def RefreshAccAddDet(self,i):
+		print(type(i),i,self.AccAddDetRoll)
+		fun = partial(self.RefreshAccAddDetMain,i)
+		self.AccAddDetRoll[i].clear_widgets()
+		color = self.NowAccs[str(i)]["color"]
+		self.AddCatBtn = Button(text="Add Details",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AccAddDetRoll[i].add_widget(self.AddCatBtn)
+
+	def RefreshAccAddDetMain(self,i,_="_"):
+		self.AccAddDetRoll[i].clear_widgets()
+
+		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+		MainRoll.bind(minimum_height=MainRoll.setter('height'))
+		self.AccAddDetRoll[i].add_widget(MainRoll)
+
+		self.AccAddDetTitleText = TextInput(size_hint_x=0.5,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,font_name=FontDict["LobsterTwo-BoldItalic"])
+		MainRoll.add_widget(self.AccAddDetTitleText)
+
+		self.AccAddDetInfoText = TextInput(size_hint_x=0.5,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,font_name=FontDict["LobsterTwo-BoldItalic"])
+		MainRoll.add_widget(self.AccAddDetInfoText)
+
+		fun = partial(self.AddAccDet,i)
+		color = self.NowAccs[str(i)]["color"]
+		self.AddAccDetBtn = Button(text="Add Account Details",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=30,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AccAddDetRoll[i].add_widget(self.AddAccDetBtn)
+
+	def AddAccDet(self,num,_="_"):
+		MyDict = {}
+		MyDict["title"] = self.AccAddDetTitleText.text
+		MyDict["info"] = self.AccAddDetInfoText.text
+
+		user = MainDict["now_user"]
+		number = str(num)
+		det_no = str(len(MainDict["users"][user]["accounts"][number]["details"])+1)
+		MainDict["users"][user]["accounts"][number]["details"][det_no] = MyDict
+		SaveDict()
+		self.RefreshAccAddDet(num)
+		self.RefreshAccDet(num)
+
+	############### account ###############
 
 	def MakeWhiteBack(self,Grid,color=-1):
 		if color == -1:
@@ -384,27 +554,6 @@ class HomeScreen(Screen):
 	def TransitionBtn(self,_="_"):
 		anim = Animation(pos_hint={"center_x":self.TogBtnX,"center_y":self.TogBtnY})
 		anim.start(self.TogBtn)
-
-	def TransitionMenuOpen(self,_="_"):
-		anim_time = 0.25
-		anim = Animation(pos_hint={"center_x":self.MenuScrollX,"center_y":self.MenuScrollY},duration=anim_time)
-		anim.start(self.MenuScrollPlay)
-		anim2 = Animation(clearcolor=(0.6,0.6,0.6,0.6),duration=anim_time)
-		anim2.start(Window)
-		self.MenuOpen = True
-
-	def TransitionMenuClose(self,_="_"):
-		anim_time = 0.25
-		anim = Animation(pos_hint={"center_x":self.MenuHideScrollX,"center_y":self.MenuHideScrollY},duration=anim_time)
-		anim.bind(on_start=lambda x,y: self.wait_anim(True),
-            on_complete=lambda x,y: self.on_pre_enter())
-		anim.start(self.MenuScrollPlay)
-		anim2 = Animation(clearcolor=(1,1,1,1),duration=anim_time)
-		anim2.start(Window)
-		self.MenuOpen = False
-
-	def wait_anim(self,x):
-		self.anim_on = x
 
 	def ChangeWindow(self,*args):
 		Name = args[0]
@@ -428,13 +577,16 @@ class HomeScreen(Screen):
 	def GetCurrUserInfo(self,*args):
 		cat = args[0]		
 		if(cat=="dp"):
-			dp = MainDict["users"][MainDict["now_user"]]["dp"]
+			dp = MainDict["users"][MainDict["now_user"]][cat]
 			return dp
 		if(cat=="name"):
-			name = MainDict["users"][MainDict["now_user"]]["name"]
+			name = MainDict["users"][MainDict["now_user"]][cat]
 			return name
 		if(cat=="categories"):
-			name = MainDict["users"][MainDict["now_user"]]["categories"]
+			name = MainDict["users"][MainDict["now_user"]][cat]
+			return name
+		if(cat=="accounts"):
+			name = MainDict["users"][MainDict["now_user"]][cat]
 			return name
 
 class MainClass(App):
