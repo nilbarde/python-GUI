@@ -467,10 +467,10 @@ class HomeScreen(Screen):
 			self.MainScrollRoll.add_widget(Roll)
 			self.RefreshAccAddDet(i)
 
-		# self.AddCatRoll = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
-		# self.AddCatRoll.bind(minimum_height=self.AddCatRoll.setter('height'))
-		# self.MainScrollRoll.add_widget(self.AddCatRoll)
-		# self.RefreshAddCat()
+		self.AddAccRoll = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
+		self.AddAccRoll.bind(minimum_height=self.AddAccRoll.setter('height'))
+		self.MainScrollRoll.add_widget(self.AddAccRoll)
+		self.RefreshAddAcc()
 
 	def RefreshAccName(self,i):
 		self.AccNameRoll[i].clear_widgets()
@@ -522,6 +522,13 @@ class HomeScreen(Screen):
 		color = self.NowAccs[str(i)]["color"]
 		self.AddAccDetBtn = Button(text="Add Account Details",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=30,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
 		self.AccAddDetRoll[i].add_widget(self.AddAccDetBtn)
+
+	def RefreshAddAcc(self):
+		fun = partial(self.RefreshAddAccMain)
+		self.AddAccRoll.clear_widgets()
+		self.AddAccColor = (0.3,0.3,0.3,0.5)
+		self.AddAccBtn = Button(text="Add Account",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.AddCatColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddAccRoll.add_widget(self.AddAccBtn)
 
 	def AddAccDet(self,num,_="_"):
 		MyDict = {}

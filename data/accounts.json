@@ -35,6 +35,10 @@
                         "1":{
                             "info":"9763551415",
                             "title":"phone"
+                        },
+                        "2":{
+                            "info":"primary paytm",
+                            "title":"account status"
                         }
                     },
                     "name":"Paytm-IDEA"
