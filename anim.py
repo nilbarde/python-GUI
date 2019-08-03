@@ -253,11 +253,13 @@ class HomeScreen(Screen):
 
 	def RefreshCatMenu(self):
 		self.MainScrollRoll.clear_widgets()
-		for i in range(1,len(self.NowCats)+1):
-			self.CatRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
-			self.CatRoll[i].bind(minimum_height=self.CatRoll[i].setter('height'))
-			self.MainScrollRoll.add_widget(self.CatRoll[i])
-			self.RefreshCat(i)
+		CatCodes = [i for i in self.NowCats]
+		CatCodes.sort()
+		for CatCode in CatCodes:
+			self.CatRoll[CatCode] = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
+			self.CatRoll[CatCode].bind(minimum_height=self.CatRoll[CatCode].setter('height'))
+			self.MainScrollRoll.add_widget(self.CatRoll[CatCode])
+			self.RefreshCat(CatCode)
 
 			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
 			Roll.bind(minimum_height=Roll.setter('height'))
@@ -265,11 +267,11 @@ class HomeScreen(Screen):
 			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
 			Thumb.bind(texture_size=Thumb.setter("size"))
 			Roll.add_widget(Thumb)
-			self.SubCatRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.8,None),padding=2)
-			self.SubCatRoll[i].bind(minimum_height=self.SubCatRoll[i].setter('height'))
-			Roll.add_widget(self.SubCatRoll[i])
+			self.SubCatRoll[CatCode] = GridLayout(cols=1,spacing=3,size_hint=(0.8,None),padding=2)
+			self.SubCatRoll[CatCode].bind(minimum_height=self.SubCatRoll[CatCode].setter('height'))
+			Roll.add_widget(self.SubCatRoll[CatCode])
 			self.MainScrollRoll.add_widget(Roll)
-			self.RefreshSubCat(i)
+			self.RefreshSubCat(CatCode)
 
 			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
 			Roll.bind(minimum_height=Roll.setter('height'))
@@ -277,68 +279,75 @@ class HomeScreen(Screen):
 			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
 			Thumb.bind(texture_size=Thumb.setter("size"))
 			Roll.add_widget(Thumb)
-			self.AddSubCatRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.8,None),padding=2)
-			self.AddSubCatRoll[i].bind(minimum_height=self.AddSubCatRoll[i].setter('height'))
-			Roll.add_widget(self.AddSubCatRoll[i])
+			self.AddSubCatRoll[CatCode] = GridLayout(cols=1,spacing=3,size_hint=(0.8,None),padding=2)
+			self.AddSubCatRoll[CatCode].bind(minimum_height=self.AddSubCatRoll[CatCode].setter('height'))
+			Roll.add_widget(self.AddSubCatRoll[CatCode])
 			self.MainScrollRoll.add_widget(Roll)
-			self.RefreshAddSubCat(i)
+			self.RefreshAddSubCat(CatCode)
 
 		self.AddCatRoll = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
 		self.AddCatRoll.bind(minimum_height=self.AddCatRoll.setter('height'))
 		self.MainScrollRoll.add_widget(self.AddCatRoll)
 		self.RefreshAddCat()
 
-	def RefreshCat(self,i):
-		self.CatRoll[i].clear_widgets()
-		name = self.NowCats[str(i)]["name"]
-		exp = self.NowCats[str(i)]["type"]
+	def RefreshCat(self,CatCode):
+		self.CatRoll[CatCode].clear_widgets()
+		name = self.NowCats[CatCode]["name"]
+		exp = self.NowCats[CatCode]["type"]
 		name +=  " - " + exp*"Income" + (1-exp)*"Expense"
-		Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.NowCats[str(i)]["color"],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
-		self.CatRoll[i].add_widget(Thumb)
+		color = self.NowCats[CatCode]["color"]
+		Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		self.CatRoll[CatCode].add_widget(Thumb)
 
-	def RefreshSubCat(self,i):
-		self.SubCatRoll[i].clear_widgets()
-		for j in range(1,len(self.NowCats[str(i)]["sub_cats"])+1):
-			name = self.NowCats[str(i)]["sub_cats"][str(j)]["name"]
-			Thumb = Button(text=name,size_hint_x=0.8,halign='center',font_size=25,size_hint_y=None,height=40,background_color=self.NowCats[str(i)]["sub_cats"][str(j)]["color"],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
-			self.SubCatRoll[i].add_widget(Thumb)
+	def RefreshSubCat(self,CatCode):
+		self.SubCatRoll[CatCode].clear_widgets()
+		SubCatCodes = [i for i in self.NowCats[CatCode]["sub_cats"]]
+		SubCatCodes.sort()
+		# for j in range(1,len(self.NowCats[str(i)]["sub_cats"])+1):
+		for SubCatCode in SubCatCodes:
+			name = self.NowCats[CatCode]["sub_cats"][SubCatCode]["name"]
+			color = self.NowCats[CatCode]["sub_cats"][SubCatCode]["color"]
+			Thumb = Button(text=name,size_hint_x=0.8,halign='center',font_size=25,size_hint_y=None,height=40,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			self.SubCatRoll[CatCode].add_widget(Thumb)
 
-	def RefreshAddSubCat(self,i):
-		self.AddSubCatRoll[i].clear_widgets()
+	def RefreshAddSubCat(self,CatCode):
+		self.AddSubCatRoll[CatCode].clear_widgets()
 
-		fun = partial(self.RefreshAddSubCatMain,i)
-		name = self.NowCats[str(i)]["name"]
-		exp = self.NowCats[str(i)]["type"]
+		fun = partial(self.RefreshAddSubCatMain,CatCode)
+		name = self.NowCats[CatCode]["name"]
+		exp = self.NowCats[CatCode]["type"]
 		name +=  " - " + exp*"Income" + (1-exp)*"Expense"
 		# self.AddSubCatColor[i] = self.all_colors[0]
-		self.AddSubCatColor[i] = (0.5,0.5,0.5,0.5)
-		self.AddSubCatBtn[i] = Button(text="Add Sub-Category In " + name,size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=40,background_color=self.AddSubCatColor[i],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
-		self.AddSubCatRoll[i].add_widget(self.AddSubCatBtn[i])
+		self.AddSubCatColor[CatCode] = (0.5,0.5,0.5,0.5)
+		color = self.AddSubCatColor[CatCode]
+		self.AddSubCatBtn[CatCode] = Button(text="Add Sub-Category In " + name,size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=40,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddSubCatRoll[CatCode].add_widget(self.AddSubCatBtn[CatCode])
 
-	def RefreshAddSubCatMain(self,i,_="_"):
-		self.AddSubCatRoll[i].clear_widgets()
+	def RefreshAddSubCatMain(self,CatCode,_="_"):
+		self.AddSubCatRoll[CatCode].clear_widgets()
 
 		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
 		MainRoll.bind(minimum_height=MainRoll.setter('height'))
-		self.AddSubCatRoll[i].add_widget(MainRoll)
+		self.AddSubCatRoll[CatCode].add_widget(MainRoll)
 
-		self.AddSubCatText[i] = TextInput(size_hint_x=0.4,valign="center",halign='center',font_size=25,size_hint_y=None,height=80,font_name=FontDict["LobsterTwo-BoldItalic"])
-		MainRoll.add_widget(self.AddSubCatText[i])
+		self.AddSubCatText[CatCode] = TextInput(size_hint_x=0.4,valign="center",halign='center',font_size=25,size_hint_y=None,height=80,font_name=FontDict["LobsterTwo-BoldItalic"])
+		MainRoll.add_widget(self.AddSubCatText[CatCode])
 
 		Roll = GridLayout(cols=4,spacing=3,size_hint=(1.0,None),padding=2,height=80)
 		for j in range(len(self.all_colors)):
-			fun = partial(self.ChangeNewColor,"sub",i,self.all_colors[j])
+			fun = partial(self.ChangeNewColor,"sub",CatCode,self.all_colors[j])
 			Thumb = Button(text="",size_hint=(1.0,1.0),valign="center",halign='center',font_size=15,background_color=self.all_colors[j],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
 			Roll.add_widget(Thumb)
 		MainRoll.add_widget(Roll)
 
-		fun = partial(self.AddCat,"sub",i)
-		name = self.NowCats[str(i)]["name"]
-		exp = self.NowCats[str(i)]["type"]
+		fun = partial(self.AddCat,"sub",CatCode)
+		name = self.NowCats[CatCode]["name"]
+		exp = self.NowCats[CatCode]["type"]
 		name +=  " - " + exp*"Income" + (1-exp)*"Expense"
-		self.AddSubCatColor[i] = self.all_colors[0]
-		self.AddSubCatBtn[i] = Button(text="Add Sub-Category In " + name,size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=40,background_color=self.AddSubCatColor[i],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
-		self.AddSubCatRoll[i].add_widget(self.AddSubCatBtn[i])
+		self.AddSubCatColor[CatCode] = self.all_colors[0]
+		color = self.AddSubCatColor[CatCode]
+		self.AddSubCatBtn[CatCode] = Button(text="Add Sub-Category In " + name,size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=40,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddSubCatRoll[CatCode].add_widget(self.AddSubCatBtn[CatCode])
 
 	def RefreshAddCat(self):
 		fun = partial(self.RefreshAddCatMain)
@@ -373,29 +382,33 @@ class HomeScreen(Screen):
 		self.AddCatBtnI = Button(text="Add Income Category",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.AddCatColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
 		self.AddCatRoll.add_widget(self.AddCatBtnI)
 
-	def ChangeNewColor(self,item_type,number,color,_="_"):
+	def ChangeNewColor(self,item_type,CatCode,color,_="_"):
 		if(item_type == "sub"):
-			self.AddSubCatColor[number] = color
-			self.AddSubCatBtn[number].background_color = color
+			self.AddSubCatColor[CatCode] = color
+			self.AddSubCatBtn[CatCode].background_color = color
 		elif(item_type == "main"):
 			self.AddCatColor = color
 			self.AddCatBtnI.background_color = color
 			self.AddCatBtnE.background_color = color
 
-	def AddCat(self,item_type,number,_="_"):
+	def AddCat(self,item_type,CatCode,_="_"):
 		if(item_type == "sub"):
-			MyDict = {"color":self.AddSubCatColor[number],"name":self.AddSubCatText[number].text}
+			MyDict = {"color":self.AddSubCatColor[CatCode],"name":self.AddSubCatText[CatCode].text}
 			user = MainDict["now_user"]
-			subs = MainDict["users"][user]["categories"][str(number)]["sub_cats"]
-			MainDict["users"][user]["categories"][str(number)]["sub_cats"][str(len(subs)+1)] = MyDict
+			MainDict["users"][user]["categories"][CatCode]["sub_count"] += 1
+			new_code = self.get_code(MainDict["users"][user]["categories"][CatCode]["sub_count"],4)
+			# subs = MainDict["users"][user]["categories"][str(CatCode)]["sub_cats"]
+			MainDict["users"][user]["categories"][CatCode]["sub_cats"][new_code] = MyDict
 			SaveDict()
-			self.RefreshSubCat(number)
-			self.RefreshAddSubCat(number)
+			self.RefreshSubCat(CatCode)
+			self.RefreshAddSubCat(CatCode)
 		if(item_type == "main"):
-			MyDict = {"type":number,"color":self.AddCatColor,"name":self.AddCatText.text,"sub_cats":{"1":{"color":[1.0,0,0,1.0],"name":"default"}}}
+			MyDict = {"type":CatCode,"color":self.AddCatColor,"name":self.AddCatText.text,"sub_cats":{"1":{"color":[1.0,0,0,1.0],"name":"default"}}}
 			user = MainDict["now_user"]
-			subs = MainDict["users"][user]["categories"]
-			MainDict["users"][user]["categories"][str(len(subs)+1)] = MyDict
+			# subs = MainDict["users"][user]["categories"]
+			MainDict["users"][user]["count"]["categories"] += 1
+			new_code = self.get_code(MainDict["users"][user]["count"]["categories"],4)
+			MainDict["users"][user]["categories"][new_code] = MyDict
 			SaveDict()
 			self.RefreshCatMenu()
 
@@ -423,13 +436,14 @@ class HomeScreen(Screen):
 		self.RefreshAccMenu()
 
 	def RefreshAccMenu(self):
-		print("adding accounts")
 		self.MainScrollRoll.clear_widgets()
-		for i in range(1,len(self.NowAccs)+1):
-			self.AccNameRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
-			self.AccNameRoll[i].bind(minimum_height=self.AccNameRoll[i].setter('height'))
-			self.MainScrollRoll.add_widget(self.AccNameRoll[i])
-			self.RefreshAccName(i)
+		AccCodes = [i for i in self.NowAccs]
+		AccCodes.sort()
+		for AccCode in AccCodes:
+			self.AccNameRoll[AccCode] = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
+			self.AccNameRoll[AccCode].bind(minimum_height=self.AccNameRoll[AccCode].setter('height'))
+			self.MainScrollRoll.add_widget(self.AccNameRoll[AccCode])
+			self.RefreshAccName(AccCode)
 
 			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
 			Roll.bind(minimum_height=Roll.setter('height'))
@@ -437,11 +451,11 @@ class HomeScreen(Screen):
 			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
 			Thumb.bind(texture_size=Thumb.setter("size"))
 			Roll.add_widget(Thumb)
-			self.AccBalRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.85,None),padding=2)
-			self.AccBalRoll[i].bind(minimum_height=self.AccBalRoll[i].setter('height'))
-			Roll.add_widget(self.AccBalRoll[i])
+			self.AccBalRoll[AccCode] = GridLayout(cols=1,spacing=3,size_hint=(0.85,None),padding=2)
+			self.AccBalRoll[AccCode].bind(minimum_height=self.AccBalRoll[AccCode].setter('height'))
+			Roll.add_widget(self.AccBalRoll[AccCode])
 			self.MainScrollRoll.add_widget(Roll)
-			self.RefreshAccBal(i)
+			self.RefreshAccBal(AccCode)
 
 			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
 			Roll.bind(minimum_height=Roll.setter('height'))
@@ -449,11 +463,11 @@ class HomeScreen(Screen):
 			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
 			Thumb.bind(texture_size=Thumb.setter("size"))
 			Roll.add_widget(Thumb)
-			self.AccDetRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.7,None),padding=2)
-			self.AccDetRoll[i].bind(minimum_height=self.AccDetRoll[i].setter('height'))
-			Roll.add_widget(self.AccDetRoll[i])
+			self.AccDetRoll[AccCode] = GridLayout(cols=1,spacing=3,size_hint=(0.7,None),padding=2)
+			self.AccDetRoll[AccCode].bind(minimum_height=self.AccDetRoll[AccCode].setter('height'))
+			Roll.add_widget(self.AccDetRoll[AccCode])
 			self.MainScrollRoll.add_widget(Roll)
-			self.RefreshAccDet(i)
+			self.RefreshAccDet(AccCode)
 
 			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
 			Roll.bind(minimum_height=Roll.setter('height'))
@@ -461,56 +475,67 @@ class HomeScreen(Screen):
 			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
 			Thumb.bind(texture_size=Thumb.setter("size"))
 			Roll.add_widget(Thumb)
-			self.AccAddDetRoll[i] = GridLayout(cols=1,spacing=3,size_hint=(0.7,None),padding=2)
-			self.AccAddDetRoll[i].bind(minimum_height=self.AccAddDetRoll[i].setter('height'))
-			Roll.add_widget(self.AccAddDetRoll[i])
+			self.AccAddDetRoll[AccCode] = GridLayout(cols=1,spacing=3,size_hint=(0.7,None),padding=2)
+			self.AccAddDetRoll[AccCode].bind(minimum_height=self.AccAddDetRoll[AccCode].setter('height'))
+			Roll.add_widget(self.AccAddDetRoll[AccCode])
 			self.MainScrollRoll.add_widget(Roll)
-			self.RefreshAccAddDet(i)
+			self.RefreshAccAddDet(AccCode)
 
 		self.AddAccRoll = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
 		self.AddAccRoll.bind(minimum_height=self.AddAccRoll.setter('height'))
 		self.MainScrollRoll.add_widget(self.AddAccRoll)
 		self.RefreshAddAcc()
 
-	def RefreshAccName(self,i):
-		self.AccNameRoll[i].clear_widgets()
-		name = self.NowAccs[str(i)]["name"]
-		color = self.NowAccs[str(i)]["color"]
+	def RefreshAccName(self,AccCode):
+		self.AccNameRoll[AccCode].clear_widgets()
+		name = self.NowAccs[AccCode]["name"]
+		color = self.NowAccs[AccCode]["color"]
 		Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
-		self.AccNameRoll[i].add_widget(Thumb)
+		self.AccNameRoll[AccCode].add_widget(Thumb)
 
-	def RefreshAccBal(self,i):
-		self.AccBalRoll[i].clear_widgets()
-		name = str(self.NowAccs[str(i)]["balance"])
-		color = self.NowAccs[str(i)]["color"]
+	def RefreshAccBal(self,AccCode):
+		self.AccBalRoll[AccCode].clear_widgets()
+		name = "Rs. " + str(self.NowAccs[AccCode]["balance"])
+		color = self.NowAccs[AccCode]["color"]
 		Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
-		self.AccBalRoll[i].add_widget(Thumb)
+		self.AccBalRoll[AccCode].add_widget(Thumb)
 
-	def RefreshAccDet(self,i):
-		self.AccDetRoll[i].clear_widgets()
-		dets = (self.NowAccs[str(i)]["details"])
-		color = self.NowAccs[str(i)]["color"]
+	def RefreshAccDet(self,AccCode):
+		self.AccDetRoll[AccCode].clear_widgets()
+		dets = (self.NowAccs[AccCode]["details"])
+		color = self.NowAccs[AccCode]["color"]
 		# print(self.NowAccs)
-		for j in range(1,len(dets)+1):
-			name = self.NowAccs[str(i)]["details"][str(j)]["title"] + " - "
-			name += self.NowAccs[str(i)]["details"][str(j)]["info"]
-			Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
-			self.AccDetRoll[i].add_widget(Thumb)
+		DetCodes = [i for i in dets]
+		DetCodes.sort()
+		# for j in range(1,len(dets)+1):
+		for DetCode in DetCodes:
+			name = self.NowAccs[AccCode]["details"][DetCode]["title"] + " - "
+			name += self.NowAccs[AccCode]["details"][DetCode]["info"]
+			Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			self.AccDetRoll[AccCode].add_widget(Thumb)
+		if not len(dets):
+			print("shrink")
+			color[-1] *= 0.5
+			Thumb = Button(text="No Details Available",halign='center',font_size=25,size_hint_y=None,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			self.AccDetRoll[AccCode].add_widget(Thumb)
 
-	def RefreshAccAddDet(self,i):
-		print(type(i),i,self.AccAddDetRoll)
-		fun = partial(self.RefreshAccAddDetMain,i)
-		self.AccAddDetRoll[i].clear_widgets()
-		color = self.NowAccs[str(i)]["color"]
+	def RefreshAccAddDet(self,AccCode):
+		fun = partial(self.RefreshAccAddDetMain,AccCode)
+		self.AccAddDetRoll[AccCode].clear_widgets()
+		color = self.NowAccs[AccCode]["color"]
 		self.AddCatBtn = Button(text="Add Details",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
-		self.AccAddDetRoll[i].add_widget(self.AddCatBtn)
+		self.AccAddDetRoll[AccCode].add_widget(self.AddCatBtn)
 
-	def RefreshAccAddDetMain(self,i,_="_"):
-		self.AccAddDetRoll[i].clear_widgets()
+	def RefreshAccAddDetMain(self,AccCode,_="_"):
+		self.AccAddDetRoll[AccCode].clear_widgets()
 
 		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
 		MainRoll.bind(minimum_height=MainRoll.setter('height'))
-		self.AccAddDetRoll[i].add_widget(MainRoll)
+		self.AccAddDetRoll[AccCode].add_widget(MainRoll)
 
 		self.AccAddDetTitleText = TextInput(size_hint_x=0.5,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,font_name=FontDict["LobsterTwo-BoldItalic"])
 		MainRoll.add_widget(self.AccAddDetTitleText)
@@ -518,30 +543,79 @@ class HomeScreen(Screen):
 		self.AccAddDetInfoText = TextInput(size_hint_x=0.5,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,font_name=FontDict["LobsterTwo-BoldItalic"])
 		MainRoll.add_widget(self.AccAddDetInfoText)
 
-		fun = partial(self.AddAccDet,i)
-		color = self.NowAccs[str(i)]["color"]
+		fun = partial(self.AddAccDet,AccCode)
+		color = self.NowAccs[AccCode]["color"]
 		self.AddAccDetBtn = Button(text="Add Account Details",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=30,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
-		self.AccAddDetRoll[i].add_widget(self.AddAccDetBtn)
+		self.AccAddDetRoll[AccCode].add_widget(self.AddAccDetBtn)
 
 	def RefreshAddAcc(self):
 		fun = partial(self.RefreshAddAccMain)
 		self.AddAccRoll.clear_widgets()
 		self.AddAccColor = (0.3,0.3,0.3,0.5)
-		self.AddAccBtn = Button(text="Add Account",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.AddCatColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddAccBtn = Button(text="Add Account",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.AddAccColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
 		self.AddAccRoll.add_widget(self.AddAccBtn)
 
-	def AddAccDet(self,num,_="_"):
+	def RefreshAddAccMain(self,_="_"):
+		self.AddAccRoll.clear_widgets()
+		self.AddAccColor = self.all_colors[4]
+
+		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=120)
+		# MainRoll.bind(minimum_height=MainRoll.setter('height'))
+		self.AddAccRoll.add_widget(MainRoll)
+
+		SubRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1)
+		MainRoll.add_widget(SubRoll)
+
+		btn = Button(text="Name : ",size_hint=(0.4,1.0),valign="center",halign='center',font_size=25,background_color=(0.0,0.6,0.7,0.8),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		SubRoll.add_widget(btn)
+
+		self.AddAccName = TextInput(size_hint=(0.6,1.0),valign="center",halign='center',font_size=25,font_name=FontDict["LobsterTwo-BoldItalic"],foreground_color=self.AddAccColor)
+		SubRoll.add_widget(self.AddAccName)
+
+		btn = Button(text="Balance : ",size_hint=(0.4,1.0),valign="center",halign='center',font_size=25,background_color=(0.0,0.6,0.7,0.8),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		SubRoll.add_widget(btn)
+
+		self.AddAccBal = TextInput(size_hint=(0.6,1.0),valign="center",halign='center',font_size=25,font_name=FontDict["LobsterTwo-BoldItalic"],foreground_color=self.AddAccColor)
+		SubRoll.add_widget(self.AddAccBal)
+
+		Roll = GridLayout(cols=4,spacing=3,size_hint=(1.0,None),padding=2)
+		for j in range(len(self.all_colors)):
+			fun = partial(self.NewAccColor,self.all_colors[j])
+			Thumb = Button(text="",size_hint=(1.0,1.0),valign="center",halign='center',font_size=15,background_color=self.all_colors[j],background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+			Roll.add_widget(Thumb)
+		MainRoll.add_widget(Roll)
+
+		fun = partial(self.AddAcc)
+		self.AddAccBtn = Button(text="Add Account",size_hint_x=1.0,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.AddAccColor,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddAccRoll.add_widget(self.AddAccBtn)
+
+	def NewAccColor(self,color,_="_"):
+		self.AddAccColor = color
+		self.AddAccName.foreground_color = color
+		self.AddAccBal.foreground_color = color
+		self.AddAccBtn.background_color = color
+
+	def AddAccDet(self,AccCode,_="_"):
 		MyDict = {}
 		MyDict["title"] = self.AccAddDetTitleText.text
 		MyDict["info"] = self.AccAddDetInfoText.text
 
 		user = MainDict["now_user"]
-		number = str(num)
-		det_no = str(len(MainDict["users"][user]["accounts"][number]["details"])+1)
-		MainDict["users"][user]["accounts"][number]["details"][det_no] = MyDict
+		MainDict["users"][user]["accounts"][AccCode]["details_count"] += 1
+		new_code = self.get_code(MainDict["users"][user]["accounts"][AccCode]["details_count"],4)
+		MainDict["users"][user]["accounts"][AccCode]["details"][new_code] = MyDict
 		SaveDict()
-		self.RefreshAccAddDet(num)
-		self.RefreshAccDet(num)
+		self.RefreshAccAddDet(AccCode)
+		self.RefreshAccDet(AccCode)
+
+	def AddAcc(self,_="_"):
+		MyDict = {"color":self.AddAccColor,"name":self.AddAccName.text,"balance":float(self.AddAccBal.text),"details":{}}
+		user = MainDict["now_user"]
+		MainDict["users"][user]["count"]["accounts"] += 1
+		new_code = self.get_code(MainDict["users"][user]["count"]["accounts"],4)
+		MainDict["users"][user]["accounts"][new_code] = MyDict
+		SaveDict()
+		self.RefreshAccMenu()
 
 	############### account ###############
 
@@ -595,6 +669,11 @@ class HomeScreen(Screen):
 		if(cat=="accounts"):
 			name = MainDict["users"][MainDict["now_user"]][cat]
 			return name
+
+	def get_code(self,num,bit):
+		code = str(num)
+		code = (bit-len(code))*"0" + code
+		return code
 
 class MainClass(App):
 	def build(self):

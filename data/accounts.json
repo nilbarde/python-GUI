@@ -7,23 +7,19 @@
         },
         "0001":{
             "accounts":{
-                "1":{
+                "0001":{
                     "balance":344.79,
                     "color":[
                         0.2,
                         0.2,
                         0.2,
-                        1.0
+                        0.5
                     ],
-                    "details":{
-                        "1":{
-                            "info":"for giving and taking money from friends",
-                            "title":"use"
-                        }
-                    },
+                    "details":{},
+                    "details_count":0,
                     "name":"Personal"
                 },
-                "2":{
+                "0002":{
                     "balance":344.79,
                     "color":[
                         1.0,
@@ -32,20 +28,38 @@
                         1.0
                     ],
                     "details":{
-                        "1":{
+                        "0001":{
                             "info":"9763551415",
                             "title":"phone"
                         },
-                        "2":{
+                        "0002":{
                             "info":"primary paytm",
                             "title":"account status"
                         }
                     },
+                    "details_count":2,
                     "name":"Paytm-IDEA"
+                },
+                "0003":{
+                    "balance":11573.61,
+                    "color":[
+                        0,
+                        1.0,
+                        0,
+                        1.0
+                    ],
+                    "details":{
+                        "0001":{
+                            "info":"google pay, online banking, atm card, primary paytm linked, UPI ID",
+                            "title":"payment options"
+                        }
+                    },
+                    "details_count":1,
+                    "name":"Bank Of Maharashtra"
                 }
             },
             "categories":{
-                "1":{
+                "0001":{
                     "color":[
                         0.2,
                         0.2,
@@ -53,6 +67,68 @@
                         1.0
                     ],
                     "name":"Food",
+                    "sub_cats":{
+                        "0001":{
+                            "color":[
+                                1.0,
+                                0,
+                                0,
+                                1.0
+                            ],
+                            "name":"default"
+                        },
+                        "0002":{
+                            "color":[
+                                0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "name":"uber"
+                        },
+                        "0004":{
+                            "color":[
+                                1.0,
+                                0,
+                                0,
+                                1.0
+                            ],
+                            "name":"swiggy"
+                        }
+                    },
+                    "sub_count":4,
+                    "type":0
+                },
+                "0003":{
+                    "color":[
+                        0,
+                        0.66,
+                        0,
+                        1.0
+                    ],
+                    "name":"Home",
+                    "sub_cats":{
+                        "0001":{
+                            "color":[
+                                1.0,
+                                0,
+                                0,
+                                1.0
+                            ],
+                            "name":"default"
+                        }
+                    },
+                    "sub_count":1,
+                    "type":1
+                },
+                "0004":{
+                    "color":[
+                        0,
+                        0,
+                        1.0,
+                        1.0
+                    ],
+                    "name":"Clothes",
                     "sub_cats":{
                         "1":{
                             "color":[
@@ -62,15 +138,6 @@
                                 1.0
                             ],
                             "name":"default"
-                        },
-                        "2":{
-                            "color":[
-                                0,
-                                1.0,
-                                1.0,
-                                1.0
-                            ],
-                            "name":"uber"
                         }
                     },
                     "type":0
@@ -84,7 +151,7 @@
                     ],
                     "name":"Travel",
                     "sub_cats":{
-                        "1":{
+                        "0001":{
                             "color":[
                                 1.0,
                                 0,
@@ -92,31 +159,24 @@
                                 1.0
                             ],
                             "name":"default"
+                        },
+                        "0002":{
+                            "color":[
+                                0.2,
+                                0.2,
+                                0.2,
+                                1.0
+                            ],
+                            "name":"laundry"
                         }
                     },
+                    "sub_count":2,
                     "type":0
-                },
-                "3":{
-                    "color":[
-                        0,
-                        0.66,
-                        0,
-                        1.0
-                    ],
-                    "name":"Home",
-                    "sub_cats":{
-                        "1":{
-                            "color":[
-                                1.0,
-                                0,
-                                0,
-                                1.0
-                            ],
-                            "name":"default"
-                        }
-                    },
-                    "type":1
                 }
+            },
+            "count":{
+                "accounts":3,
+                "categories":4
             },
             "dp":"./data/app_images/0001.jpg",
             "expenses":{},
