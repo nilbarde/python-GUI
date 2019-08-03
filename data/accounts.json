@@ -176,10 +176,42 @@
             },
             "count":{
                 "accounts":3,
-                "categories":4
+                "categories":4,
+                "friends":4
             },
             "dp":"./data/app_images/0001.jpg",
             "expenses":{},
+            "friends":{
+                "0001":{
+                    "balance":2239.5,
+                    "details":{
+                        "0001":{
+                            "info":"9082422590",
+                            "title":"phone number"
+                        }
+                    },
+                    "details_count":2,
+                    "name":"vashishtha"
+                },
+                "0002":{
+                    "balance":4000.0,
+                    "details":{},
+                    "details_count":0,
+                    "name":"mhaske"
+                },
+                "0003":{
+                    "balance":1350.0,
+                    "details":{},
+                    "details_count":0,
+                    "name":"Gaurav Dey"
+                },
+                "0004":{
+                    "balance":-40.0,
+                    "details":{},
+                    "details_count":0,
+                    "name":"Rhushabh Gedam"
+                }
+            },
             "name":"Nil Barde"
         }
     }

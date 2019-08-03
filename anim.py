@@ -129,6 +129,10 @@ class HomeScreen(Screen):
 			self.clear_widgets()
 			self.AddToggleBtn()
 			self.ShowAccounts()
+		elif self.NowWindow == "ShowFriend":
+			self.clear_widgets()
+			self.AddToggleBtn()
+			self.ShowFriends()
 
 	def AddToggleBtn(self,_="_"):
 		fun = partial(self.ChangeWindow,"Menu")
@@ -186,9 +190,10 @@ class HomeScreen(Screen):
 		self.MenuGrid.bind(minimum_height=self.MenuGrid.setter('height'))
 
 		self.MenuTopics = {
-			0:{"name":"Show Accounts","window":"ShowAccount"},
-			1:{"name":"Show Expenses","window":"ShowExpense"},
-			2:{"name":"Show Categories","window":"ShowCategory"}
+			0:{"name":"Accounts","window":"ShowAccount"},
+			1:{"name":"Expenses","window":"ShowExpense"},
+			2:{"name":"Categories","window":"ShowCategory"},
+			3:{"name":"Friends","window":"ShowFriend"}
 		}
 
 		for i in range(len(self.MenuTopics)):
@@ -427,9 +432,11 @@ class HomeScreen(Screen):
 	def AddAccountMenu(self):
 		self.MainScrollRoll.clear_widgets()
 
+		self.AccHeadRoll = {}
 		self.AccNameRoll = {}
 		self.AccBalRoll = {}
 		self.AccDetRoll = {}
+		self.AccDetShow = {}
 		self.AccAddDetRoll = {}
 
 		self.NowAccs = self.GetCurrUserInfo("accounts")
@@ -440,9 +447,13 @@ class HomeScreen(Screen):
 		AccCodes = [i for i in self.NowAccs]
 		AccCodes.sort()
 		for AccCode in AccCodes:
-			self.AccNameRoll[AccCode] = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
+			self.AccHeadRoll[AccCode] = GridLayout(cols=1,spacing=1,size_hint=(1.0,None),padding=1)
+			self.AccHeadRoll[AccCode].bind(minimum_height=self.AccHeadRoll[AccCode].setter('height'))
+			self.MainScrollRoll.add_widget(self.AccHeadRoll[AccCode])
+
+			self.AccNameRoll[AccCode] = GridLayout(cols=1,spacing=2,size_hint=(1.0,None),padding=2)
 			self.AccNameRoll[AccCode].bind(minimum_height=self.AccNameRoll[AccCode].setter('height'))
-			self.MainScrollRoll.add_widget(self.AccNameRoll[AccCode])
+			self.AccHeadRoll[AccCode].add_widget(self.AccNameRoll[AccCode])
 			self.RefreshAccName(AccCode)
 
 			Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
@@ -504,13 +515,11 @@ class HomeScreen(Screen):
 		self.AccDetRoll[AccCode].clear_widgets()
 		dets = (self.NowAccs[AccCode]["details"])
 		color = self.NowAccs[AccCode]["color"]
-		# print(self.NowAccs)
 		DetCodes = [i for i in dets]
 		DetCodes.sort()
-		# for j in range(1,len(dets)+1):
 		for DetCode in DetCodes:
-			name = self.NowAccs[AccCode]["details"][DetCode]["title"] + " - "
-			name += self.NowAccs[AccCode]["details"][DetCode]["info"]
+			name = dets[DetCode]["title"] + " - "
+			name += dets[DetCode]["info"]
 			Thumb = Button(text=name,halign='center',font_size=25,size_hint_y=None,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
 			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
 			Thumb.bind(texture_size=Thumb.setter("size"))
@@ -609,7 +618,7 @@ class HomeScreen(Screen):
 		self.RefreshAccDet(AccCode)
 
 	def AddAcc(self,_="_"):
-		MyDict = {"color":self.AddAccColor,"name":self.AddAccName.text,"balance":float(self.AddAccBal.text),"details":{}}
+		MyDict = {"color":self.AddAccColor,"name":self.AddAccName.text,"balance":float(self.AddAccBal.text),"details":{},"details_count":0}
 		user = MainDict["now_user"]
 		MainDict["users"][user]["count"]["accounts"] += 1
 		new_code = self.get_code(MainDict["users"][user]["count"]["accounts"],4)
@@ -618,6 +627,208 @@ class HomeScreen(Screen):
 		self.RefreshAccMenu()
 
 	############### account ###############
+
+	############### friend ###############
+	def ShowFriends(self):
+		self.MainScrollPlay = ScrollView(size_hint=(self.MainScrollW, self.MainScrollH),pos_hint={"center_x":self.MainScrollX,"center_y":self.MainScrollY}, size=(Window.width, Window.height))
+		self.MainScrollRoll = GridLayout(cols=1, spacing=1, size_hint_y=None,padding=1)
+		self.MainScrollRoll.bind(minimum_height=self.MainScrollRoll.setter('height'))
+		self.MainScrollPlay.add_widget(self.MainScrollRoll)
+		self.add_widget(self.MainScrollPlay)
+		self.MakeWhiteBack(self.MainScrollPlay,partial(Color,1.0,1.0,0.2,1.0))
+		self.AddFriendMenu()
+
+	def AddFriendMenu(self):
+		self.MainScrollRoll.clear_widgets()
+
+		self.FrndHeadRoll = {}
+		self.FrndRoll = {}
+		self.FrndBtn = {}
+		self.FrndDetRoll = {}
+		self.FrndDetShow = {}
+		self.FrndAddDetRoll = {}
+
+		self.NowFrnds = self.GetCurrUserInfo("friends")
+		self.RefreshFrndMenu()
+
+	def RefreshFrndMenu(self):
+		self.MainScrollRoll.clear_widgets()
+		FrndCodes = [i for i in self.NowFrnds]
+		FrndCodes.sort()
+		for FrndCode in FrndCodes:
+			self.FrndHeadRoll[FrndCode] = GridLayout(cols=1,spacing=1,size_hint=(1.0,None),padding=1)
+			self.FrndHeadRoll[FrndCode].bind(minimum_height=self.FrndHeadRoll[FrndCode].setter('height'))
+			self.MainScrollRoll.add_widget(self.FrndHeadRoll[FrndCode])
+
+			self.FrndRoll[FrndCode] = GridLayout(cols=1,spacing=0,size_hint=(1.0,None),padding=0)
+			self.FrndRoll[FrndCode].bind(minimum_height=self.FrndRoll[FrndCode].setter('height'))
+			self.FrndHeadRoll[FrndCode].add_widget(self.FrndRoll[FrndCode])
+
+			self.FrndDetShow[FrndCode] = False
+			self.FrndDetRoll[FrndCode] = GridLayout(cols=1,spacing=2,size_hint=(0.8,None),padding=2)
+			self.FrndDetRoll[FrndCode].bind(minimum_height=self.FrndDetRoll[FrndCode].setter('height'))
+			self.FrndHeadRoll[FrndCode].add_widget(self.FrndDetRoll[FrndCode])
+
+			self.FrndAddDetRoll[FrndCode] = GridLayout(cols=1,spacing=3,size_hint=(0.8,None),padding=2)
+			self.FrndAddDetRoll[FrndCode].bind(minimum_height=self.FrndAddDetRoll[FrndCode].setter('height'))
+			self.FrndHeadRoll[FrndCode].add_widget(self.FrndAddDetRoll[FrndCode])
+
+			self.RefreshFrnd(FrndCode)
+			# self.RefreshFrndDet(FrndCode)
+			# self.RefreshFrndAddDet(FrndCode)
+
+		self.AddFrndRoll = GridLayout(cols=1,spacing=3,size_hint=(1.0,None),padding=2)
+		self.AddFrndRoll.bind(minimum_height=self.AddFrndRoll.setter('height'))
+		self.MainScrollRoll.add_widget(self.AddFrndRoll)
+		self.RefreshAddFrnd()
+
+	def RefreshFrnd(self,FrndCode,_="_"):
+		self.FrndRoll[FrndCode].clear_widgets()
+
+		Roll = GridLayout(cols=2,spacing=5,size_hint=(1.0,None),padding=4)
+		Roll.bind(minimum_height=Roll.setter('height'))
+		self.FrndRoll[FrndCode].add_widget(Roll)
+
+		name = self.NowFrnds[FrndCode]["name"]
+		bal = self.NowFrnds[FrndCode]["balance"]
+		if bal<0:
+			color = self.red
+		else:
+			color = self.green
+		if self.FrndDetShow[FrndCode]:
+			self.FrndDetShow[FrndCode] = False
+			fun = partial(self.RefreshFrnd,FrndCode)
+		else:
+			self.FrndDetRoll[FrndCode].clear_widgets()
+			self.FrndAddDetRoll[FrndCode].clear_widgets()
+			fun = partial(self.RefreshFrndDet,FrndCode)
+		self.FrndBtn[FrndCode] = Button(text=name,halign='center',font_size=25,size_hint=(0.4,None),height=50,background_color=(0,0,0,1),color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		Roll.add_widget(self.FrndBtn[FrndCode])
+		Thumb = Button(text="Rs. " + str(abs(bal)),halign='center',font_size=25,size_hint=(0.6,None),height=50,background_color=color,color=(0,0,0,1),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		Roll.add_widget(Thumb)
+
+	def RefreshFrndDet(self,FrndCode,_="_"):
+		self.FrndDetShow[FrndCode] = True
+		self.FrndRoll[FrndCode].clear_widgets()
+		self.RefreshFrnd(FrndCode)
+
+		Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1)
+		Roll.bind(minimum_height=Roll.setter('height'))
+		self.FrndDetRoll[FrndCode].add_widget(Roll)
+
+		dets = (self.NowFrnds[FrndCode]["details"])
+		# color = self.NowFrnds[FrndCode]["color"]
+		DetCodes = [i for i in dets]
+		DetCodes.sort()
+		color = self.blue
+		for DetCode in DetCodes:
+			Thumb = Button(text="",size_hint=(0.2,None),halign='center',font_size=25,height=40,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			Roll.add_widget(Thumb)
+
+			name = dets[DetCode]["title"] + " - "
+			name += dets[DetCode]["info"]
+			print(name)
+			Thumb = Button(text=name,halign='center',font_size=25,size_hint=(0.8,None),height=40,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+			Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+			Thumb.bind(texture_size=Thumb.setter("size"))
+			Roll.add_widget(Thumb)
+		fun = partial(self.RefreshFrnd,FrndCode)
+		self.FrndBtn[FrndCode].on_press = fun
+		self.RefreshFrndAddDet(FrndCode)
+
+	def RefreshFrndAddDet(self,FrndCode):
+		self.FrndAddDetRoll[FrndCode].clear_widgets()
+		fun = partial(self.RefreshFrndAddDetMain,FrndCode)
+
+		Roll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1)
+		Roll.bind(minimum_height=Roll.setter('height'))
+		self.FrndAddDetRoll[FrndCode].add_widget(Roll)
+
+		Thumb = Button(text="",size_hint_x=0.2,halign='center',font_size=25,size_hint_y=None,height=30,background_color=(0,0,0,0),background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		Thumb.bind(width=lambda s,w: s.setter("text_size")(s,(w,None)))
+		Thumb.bind(texture_size=Thumb.setter("size"))
+		Roll.add_widget(Thumb)
+
+		color = self.blue
+		self.AddCatBtn = Button(text="Add Details",size_hint_x=0.8,valign="center",halign='center',font_size=25,size_hint_y=None,height=30,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		Roll.add_widget(self.AddCatBtn)
+
+	def RefreshFrndAddDetMain(self,FrndCode,_="_"):
+		self.FrndAddDetRoll[FrndCode].clear_widgets()
+
+		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=80)
+		MainRoll.bind(minimum_height=MainRoll.setter('height'))
+		self.FrndAddDetRoll[FrndCode].add_widget(MainRoll)
+
+		self.FrndAddDetTitleText = TextInput(size_hint_x=0.5,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,font_name=FontDict["LobsterTwo-BoldItalic"])
+		MainRoll.add_widget(self.FrndAddDetTitleText)
+
+		self.FrndAddDetInfoText = TextInput(size_hint_x=0.5,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,font_name=FontDict["LobsterTwo-BoldItalic"])
+		MainRoll.add_widget(self.FrndAddDetInfoText)
+
+		fun = partial(self.AddFrndDet,FrndCode)
+		color = self.blue
+		self.AddFrndDetBtn = Button(text="Add Friend Details",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=30,background_color=color,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.FrndAddDetRoll[FrndCode].add_widget(self.AddFrndDetBtn)
+
+	def RefreshAddFrnd(self):
+		fun = partial(self.RefreshAddFrndMain)
+		self.AddFrndRoll.clear_widgets()
+		self.AddFrndBtn = Button(text="Add Friend",size_hint_x=0.2,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.black,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddFrndRoll.add_widget(self.AddFrndBtn)
+
+	def RefreshAddFrndMain(self,_="_"):
+		self.AddFrndRoll.clear_widgets()
+		self.AddFrndColor = self.all_colors[4]
+
+		MainRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1,height=120)
+		# MainRoll.bind(minimum_height=MainRoll.setter('height'))
+		self.AddFrndRoll.add_widget(MainRoll)
+
+		SubRoll = GridLayout(cols=2,spacing=1,size_hint=(1.0,None),padding=1)
+		MainRoll.add_widget(SubRoll)
+
+		btn = Button(text="Name : ",size_hint=(0.4,1.0),valign="center",halign='center',font_size=25,background_color=self.black,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		SubRoll.add_widget(btn)
+
+		self.AddFrndName = TextInput(size_hint=(0.6,1.0),valign="center",halign='center',font_size=25,font_name=FontDict["LobsterTwo-BoldItalic"],foreground_color=self.black)
+		SubRoll.add_widget(self.AddFrndName)
+
+		btn = Button(text="Balance : ",size_hint=(0.4,1.0),valign="center",halign='center',font_size=25,background_color=self.black,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"])
+		SubRoll.add_widget(btn)
+
+		self.AddFrndBal = TextInput(size_hint=(0.6,1.0),valign="center",halign='center',font_size=25,font_name=FontDict["LobsterTwo-BoldItalic"],foreground_color=self.black)
+		SubRoll.add_widget(self.AddFrndBal)
+
+		fun = partial(self.AddFrnd)
+		self.AddFrndBtn = Button(text="Add Friend",size_hint_x=1.0,valign="center",halign='center',font_size=25,size_hint_y=None,height=50,background_color=self.black,background_normal="",font_name=FontDict["LobsterTwo-BoldItalic"],on_press=fun)
+		self.AddFrndRoll.add_widget(self.AddFrndBtn)
+
+	def AddFrndDet(self,FrndCode,_="_"):
+		MyDict = {}
+		MyDict["title"] = self.FrndAddDetTitleText.text
+		MyDict["info"] = self.FrndAddDetInfoText.text
+
+		user = MainDict["now_user"]
+		MainDict["users"][user]["friends"][FrndCode]["details_count"] += 1
+		new_code = self.get_code(MainDict["users"][user]["friends"][FrndCode]["details_count"],4)
+		MainDict["users"][user]["friends"][FrndCode]["details"][new_code] = MyDict
+		SaveDict()
+		self.RefreshFrndAddDet(FrndCode)
+		self.RefreshFrndDet(FrndCode)
+
+	def AddFrnd(self,_="_"):
+		MyDict = {"name":self.AddFrndName.text,"balance":float(self.AddFrndBal.text),"details":{},"details_count":0}
+		user = MainDict["now_user"]
+		MainDict["users"][user]["count"]["friends"] += 1
+		new_code = self.get_code(MainDict["users"][user]["count"]["friends"],4)
+		MainDict["users"][user]["friends"][new_code] = MyDict
+		SaveDict()
+		self.RefreshFrndMenu()
+
+	############### friend ###############
 
 	def MakeWhiteBack(self,Grid,color=-1):
 		if color == -1:
@@ -669,6 +880,9 @@ class HomeScreen(Screen):
 		if(cat=="accounts"):
 			name = MainDict["users"][MainDict["now_user"]][cat]
 			return name
+		if(cat=="friends"):
+			name = MainDict["users"][MainDict["now_user"]][cat]
+			return name
 
 	def get_code(self,num,bit):
 		code = str(num)
@@ -684,6 +898,7 @@ class MainClass(App):
 
 class ScreenManagerbuild(ScreenManager):
 	pass
+
 if __name__ == '__main__':
 	LoadDict()
 	MainClass().run()
